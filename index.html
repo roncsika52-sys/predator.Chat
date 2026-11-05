@@ -46,7 +46,7 @@ h2{font-size:21px}h3{font-size:17px}#roomTitle{font-size:19px;font-weight:bold}
 .hidden{display:none!important}.small{font-size:13px}
 .avatar{width:100px;height:100px;object-fit:cover;border-radius:50%;display:block;margin-bottom:12px;background:#29292f;border:2px solid var(--red)}
 #avatarFile{margin:10px 0}
-.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
+.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}.member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
 @media(max-width:650px){header{padding:11px 10px;gap:7px}h1{font-size:18px}#userbar{max-width:28vw;font-size:11px}header>button{padding:9px;font-size:13px}main{padding:0 8px;margin:9px auto}.panel{padding:11px;border-radius:13px}.layout{grid-template-columns:1fr;gap:8px}#chat .layout>aside{margin-bottom:0}#chat .layout>aside h3{margin:0 0 6px}#chat .layout>aside p{margin:5px 0}#messages{height:calc(100dvh - 330px);min-height:240px;max-height:58vh}.msg{padding:10px 5px}.msg div{font-size:16px}.composer{position:sticky;bottom:4px;z-index:5}.composer input{font-size:16px;padding:11px 12px}.composer button{padding:11px 12px}.tabs button{font-size:13px;padding:10px}.auth{margin:15px auto}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 .msg .msg-head b { color: #ff5b70; }
@@ -210,7 +210,7 @@ button {
 @media(max-width:850px){.predator-layout{grid-template-columns:1fr}.predator-layout>main{padding:12px}}
   #chatImageFile{display:none}.chat-image{display:block;max-width:100%;max-height:420px;object-fit:contain;border-radius:12px;margin-top:8px}
 
-</style>#onlineMemberList .member-item {
+#onlineMemberList .member-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -233,7 +233,8 @@ button {
   min-width: 0;
 }
   
-  </head>
+</style>
+</head>
 <body>
 <header>
   <h1>🔴 Predator <span>Chat</span></h1>
@@ -245,9 +246,8 @@ button {
   <div id="normalAuth">
     <h2>Belépés / Regisztráció</h2>
     <form id="authform" class="form">
-     <input id="username" type="text" placeholder="Felhasználónév" autocomplete="username">
-     <input id="username" type="text" placeholder="Felhasználónév" required minlength="3" maxlength="24">
-      <input id="email" type="email" placeholder="E-mail-cím" required autocomplete="email">
+     <input id="username" type="text" placeholder="Felhasználónév (regisztrációhoz)" minlength="3" maxlength="24" autocomplete="username">
+      <input id="email" type="email" placeholder="E-mail-cím (belépéshez és regisztrációhoz)" required autocomplete="email">
       <input id="password" type="password" placeholder="Jelszó (legalább 6 karakter)" minlength="6" required autocomplete="current-password">
       <div class="actions"><button type="submit">Bejelentkezés</button><button type="button" id="register">Regisztráció</button></div>
       <button type="button" id="forgotPassword">Elfelejtett jelszó?</button>
@@ -304,7 +304,7 @@ button {
     <p id="chatStatus" role="status" class="muted small"></p>
     <div id="messages"></div>
     <form id="sendForm" class="composer">
-      <input id="message" maxlength="2000" placeholder="Írd ide az üzeneted..." required><input id="chatImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><button id="chooseChatImage" type="button" title="Kép csatolása">📷</button>
+      <input id="message" maxlength="2000" placeholder="Írd ide az üzeneted..." autocomplete="off"><input id="chatImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><button id="chooseChatImage" type="button" title="Kép csatolása">📷</button>
       <button type="submit">Küldés</button>
     </form>
   </section>
@@ -321,8 +321,8 @@ button {
     <h2>Profilom</h2><img id="avatarPreview" class="avatar" src="https://placehold.co/120x120?text=Profil" alt="Profilkép">
     <label for="displayName">Megjelenő név</label><input id="displayName" maxlength="32" placeholder="A chatben látható neved"><button type="button" id="saveDisplayName">Név mentése</button><p id="displayNameStatus" class="muted small"></p>
     <label for="avatarFile">Profilkép kiválasztása</label><input id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
-    <button type="button" id="uploadAvatar">Profilkép feltöltése</button><p id="avatarStatus"></p><p id="profileEmail"></p><hr><h3>Háttérkép</h3><p class="muted small">A háttérkép ezen a böngészőn lesz elmentve.</p><input id="backgroundFile"
-       <section class="panel" id="sharedBackground">
+    <button type="button" id="uploadAvatar">Profilkép feltöltése</button><p id="avatarStatus"></p><p id="profileEmail"></p><hr><h3>Háttérkép</h3><p class="muted small">A háttérkép ezen a böngészőn lesz elmentve.</p><input id="backgroundFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <section class="panel" id="sharedBackground">
   <h2>🎨 Közös chat-háttér</h2>
   <p>Minden tagnál megjelenő háttér beállítása.</p>
   <label for="sharedBgColor">Háttérszín</label>
@@ -411,23 +411,40 @@ $('register').addEventListener('click',async()=>{
     status('Adj meg legalább 3 karakteres felhasználónevet.');
     return;
   }
+  if(!/^[a-zA-Z0-9_.-]{3,24}$/.test(username)){
+    status('A felhasználónév 3–24 karakter legyen; csak angol betűt, számot, pontot, kötőjelet és aláhúzást használj.');
+    return;
+  }
   if(!email||password.length<6){
     status('Adj meg e-mail-címet és legalább 6 karakteres jelszót.');
     return;
   }
 
+  const button = $('register');
+  button.disabled = true;
   status('Fiók létrehozása…');
-  const {error}=await db.auth.signUp({
-    email,
-    password,
-    options:{
-      data:{username:username,display_name:username},
-      emailRedirectTo:location.origin+location.pathname
-    }
-  });
+  try {
+    const { data, error } = await db.auth.signUp({
+      email: email.trim().toLowerCase(),
+      password,
+      options: {
+        data: { username, display_name: username },
+        emailRedirectTo: location.origin + location.pathname
+      }
+    });
+    if (error) throw error;
 
-  status(error?'Regisztrációs hiba: '+error.message:
-    'Regisztráció elküldve. Ha megerősítő levelet kapsz, nyisd meg azt.');
+    if (data?.session) {
+      status('Sikeres regisztráció! Most már bejelentkezhetsz.');
+    } else {
+      status('A regisztráció elkészült. Nyisd meg a ' + email +
+        ' címre érkező megerősítő levelet. Nézd meg a Spam mappát is.');
+    }
+  } catch (error) {
+    status('Regisztrációs hiba: ' + (error?.message || 'Ismeretlen hiba.'));
+  } finally {
+    button.disabled = false;
+  }
 });
 $('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim();if(!email){status('Először írd be az e-mail-címedet!');return}status('Jelszó-visszaállító e-mail küldése…');const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});status(error?'Hiba: '+error.message:'Ha a cím regisztrálva van, elküldtük a visszaállító e-mailt. A legfrissebb levelet nyisd meg.')});
 $('newPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const p1=$('newPassword').value,p2=$('newPasswordAgain').value;if(p1.length<6){status('A jelszónak legalább 6 karakteresnek kell lennie.');return}if(p1!==p2){status('A két jelszó nem egyezik.');return}status('Jelszó mentése…');const {error}=await db.auth.updateUser({password:p1});if(error){status('Nem sikerült megváltoztatni a jelszót: '+error.message);return}status('Sikerült megváltoztatni a jelszót.');$('newPasswordForm').reset();showRecovery(false);await db.auth.signOut();history.replaceState(null,'',location.pathname)});
@@ -619,117 +636,148 @@ $('clearBackground').addEventListener('click',()=>{
 loadSharedBackground();
 function setMemberStatus(message){$('membersStatus').textContent=message||''}
 function setPrivateStatus(message){$('privateStatus').textContent=message||''}
-async function loadMembers(){function renderOnlineMembers(){
-  const sideList=$('onlineMemberList');
-  if(!sideList)return;
+function renderOnlineMembers(){
+  const sideList = $('onlineMemberList');
+  if (!sideList) return;
   sideList.replaceChildren();
 
-  const ids=new Set(onlineUserIds);
-  if(currentUser)ids.add(String(currentUser.id));
+  const ids = new Set(onlineUserIds);
+  if (currentUser) ids.add(String(currentUser.id));
 
-  let count=0;
-  for(const id of ids){
-    const p=profileCache.get(String(id));
-    if(!p)continue;
+  let count = 0;
+  for (const id of ids) {
+    const profile = profileCache.get(String(id));
+    if (!profile) continue;
 
-    const row=document.createElement('div');
-    row.className='member-item';
+    const row = document.createElement('div');
+    row.className = 'member-item';
 
-    const img=document.createElement('img');
-    img.alt='Profilkép';
-    img.src=p.avatar_url||DEFAULT_AVATAR;
+    const img = document.createElement('img');
+    img.alt = 'Profilkép';
+    img.src = profile.avatar_url || DEFAULT_AVATAR;
 
-    const name=document.createElement('div');
-    name.className='member-name';
-   name.textContent =
-  (p.display_name && p.display_name !== 'Tag'
-    ? p.display_name
-    : (p.email ? p.email.split('@')[0] : 'Tag'));
+    const name = document.createElement('div');
+    name.className = 'member-name';
+    name.textContent = profile.display_name ||
+      (profile.email ? profile.email.split('@')[0] : 'Tag');
 
-    row.append(img,name);
+    row.append(img, name);
     sideList.append(row);
     count++;
   }
 
-  $('onlineMembersStatus').textContent=count+' online tag';
+  $('onlineMembersStatus').textContent = count + ' online tag';
 }
 
 function startOnlinePresence(){
-  if(!currentUser)return;
+  if (!currentUser) return;
 
-  if(onlinePresenceChannel){
+  if (onlinePresenceChannel) {
     db.removeChannel(onlinePresenceChannel);
-    onlinePresenceChannel=null;
+    onlinePresenceChannel = null;
   }
 
-  const channel=db.channel('predator-online-users',{
-    config:{presence:{key:String(currentUser.id)}}
+  const channel = db.channel('predator-online-users', {
+    config: { presence: { key: String(currentUser.id) } }
   });
+  onlinePresenceChannel = channel;
 
-  onlinePresenceChannel=channel;
-
-  channel.on('presence',{event:'sync'},()=>{
+  channel.on('presence', { event: 'sync' }, () => {
     onlineUserIds.clear();
-    const state=channel.presenceState();
-
-    for(const [key,entries] of Object.entries(state)){
-      for(const entry of entries){
-        onlineUserIds.add(String(entry.user_id||key));
+    const state = channel.presenceState();
+    for (const [key, entries] of Object.entries(state)) {
+      for (const entry of entries) {
+        onlineUserIds.add(String(entry.user_id || key));
       }
     }
-
     renderOnlineMembers();
   });
 
-  channel.subscribe(async status=>{
-    if(status==='SUBSCRIBED'){
+  channel.subscribe(async status => {
+    if (status === 'SUBSCRIBED') {
       await channel.track({
-        user_id:String(currentUser.id),
-        online_at:new Date().toISOString()
+        user_id: String(currentUser.id),
+        online_at: new Date().toISOString()
       });
     }
   });
 }
-  if(!currentUser)return;
+
+async function loadMembers(){
+  if (!currentUser) return;
   setMemberStatus('Tagok betöltése…');
-  const {data,error}=await db.from('profiles').select('id,display_name,email,avatar_url,role').order('display_name',{ascending:true}).limit(500);
-  if(error){setMemberStatus('Nem tölthető be a taglista: '+error.message+' — a profiles táblához SELECT jogosultság szükséges.');return}
-  const list=$('memberList');list.replaceChildren();
-  const recipients=$('privateRecipient');const previous=recipients.value;recipients.replaceChildren();
-  const first=document.createElement('option');first.value='';first.textContent='Válassz tagot…';recipients.append(first);
-  const others=data||[];
-  for(const p of data||[]){
-    profileCache.set(String(p.id),p);
-    if(String(p.id)!==String(currentUser.id)){
-      const opt=document.createElement('option');opt.value=String(p.id);opt.textContent=p.display_name||p.email||('Tag '+String(p.id).slice(0,8));recipients.append(opt);
+
+  const { data, error } = await db.from('profiles')
+    .select('id,display_name,email,avatar_url,role')
+    .order('display_name', { ascending: true })
+    .limit(500);
+
+  if (error) {
+    setMemberStatus('Nem tölthető be a taglista: ' + error.message +
+      ' — a profiles táblához SELECT jogosultság szükséges.');
+    return;
+  }
+
+  const list = $('memberList');
+  list.replaceChildren();
+
+  const recipients = $('privateRecipient');
+  const previous = recipients.value;
+  recipients.replaceChildren();
+
+  const first = document.createElement('option');
+  first.value = '';
+  first.textContent = 'Válassz tagot…';
+  recipients.append(first);
+
+  const profiles = data || [];
+  for (const profile of profiles) {
+    profileCache.set(String(profile.id), profile);
+
+    if (String(profile.id) !== String(currentUser.id)) {
+      const option = document.createElement('option');
+      option.value = String(profile.id);
+      option.textContent = profile.display_name ||
+        profile.email || ('Tag ' + String(profile.id).slice(0, 8));
+      recipients.append(option);
+
+      const row = document.createElement('div');
+      row.className = 'member-item';
+
+      const img = document.createElement('img');
+      img.alt = 'Profilkép';
+      img.src = profile.avatar_url || DEFAULT_AVATAR;
+
+      const name = document.createElement('div');
+      name.className = 'member-name';
+      name.textContent = profile.display_name ||
+        profile.email || ('Tag ' + String(profile.id).slice(0, 8));
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = 'Privát üzenet';
+      button.addEventListener('click', () => {
+        document.querySelector('[data-tab="private"]').click();
+        $('privateRecipient').value = String(profile.id);
+        privateRecipientId = String(profile.id);
+        loadPrivateMessages();
+      });
+
+      row.append(img, name, button);
+      list.append(row);
     }
   }
-  const sideList=$('onlineMemberList');
-sideList.replaceChildren();
 
-for(const p of data||[]){
-  const row=document.createElement('div');
-  row.className='member-item';
+  if (previous && profiles.some(p => String(p.id) === previous)) {
+    recipients.value = previous;
+  }
 
-  const name=document.createElement('div');
-  name.className='member-name';
+  renderOnlineMembers();
 
-const label = p.display_name || p.email?.split('@')[0] || 'Tag';
-name.textContent = label;
-
-  row.append(name);
-  sideList.append(row);
-}
-
-$('onlineMembersStatus').textContent=(data||[]).length+' tag betöltve.';
-  if(!others.length){setMemberStatus('Másik tag nem látható. Ellenőrizni kell, hogy a profiles SELECT szabály engedi-e a tagok olvasását.');return}
-  setMemberStatus(others.length+' tag betöltve.');
-  for(const p of others){
-    const row=document.createElement('div');row.className='member-item';
-    const img=document.createElement('img');img.alt='Profilkép';img.src=p.avatar_url||DEFAULT_AVATAR;
-    const name=document.createElement('div');name.className='member-name';name.textContent=p.display_name||p.email||('Tag '+String(p.id).slice(0,8));
-    const btn=document.createElement('button');btn.type='button';btn.textContent='Privát üzenet';btn.addEventListener('click',()=>{document.querySelector('[data-tab="private"]').click();$('privateRecipient').value=String(p.id);privateRecipientId=String(p.id);loadPrivateMessages()});
-    row.append(img,name,btn);list.append(row);
+  if (!profiles.some(p => String(p.id) !== String(currentUser.id))) {
+    setMemberStatus('Másik tag nem látható. Ellenőrizni kell, hogy a profiles SELECT szabály engedi-e a tagok olvasását.');
+  } else {
+    setMemberStatus((profiles.length - 1) + ' másik tag betöltve.');
   }
 }
 async function loadPrivateMessages(){
@@ -914,7 +962,19 @@ $('onlineMemberList').replaceChildren();
 $('onlineMembersStatus').textContent='Nincs online tag';
   currentUser=session?.user||null;const loggedIn=!!currentUser;
   $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?currentUser.email:'Nincs bejelentkezve';
-  if(!loggedIn){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}currentRoom=null;$('messages').replaceChildren();$('adminTab').classList.add('hidden');$('roomAdminTools').classList.add('hidden');$('roleAdminTools').classList.add('hidden');return}
+  if(!loggedIn){
+    if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}
+    if(onlinePresenceChannel){db.removeChannel(onlinePresenceChannel);onlinePresenceChannel=null}
+    onlineUserIds.clear();
+    currentRoom=null;
+    $('messages').replaceChildren();
+    $('onlineMemberList').replaceChildren();
+    $('onlineMembersStatus').textContent='Nincs online tag';
+    $('adminTab').classList.add('hidden');
+    $('roomAdminTools').classList.add('hidden');
+    $('roleAdminTools').classList.add('hidden');
+    return;
+  }
   $('profileEmail').textContent=currentUser.email||'';$('displayName').value=profileCache.get(String(currentUser.id))?.display_name||currentUser.email?.split('@')[0]||'';
   await loadProfileCache();
   const oldProfile=profileCache.get(String(currentUser.id))||{};
@@ -929,194 +989,61 @@ startOnlinePresence();
 db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){showRecovery(true);return}if(event==='SIGNED_OUT')recoveryMode=false;setTimeout(()=>showSession(session),0)});
 (async()=>{if(!explainUrlError()){const {data,error}=await db.auth.getSession();if(error)status('Munkamenet-hiba: '+error.message);if(data?.session)await showSession(data.session)}})();
 
-// Predator Chat – közös háttérbeállítás
-(async function () {
-  const colorInput = document.getElementById('sharedBgColor');
-  const fileInput = document.getElementById('sharedBgFile');
-  const status = document.getElementById('sharedBgStatus');
+// Közös háttér vezérlői – ugyanazt a chat_background beállítást használják.
+$('sharedBgSaveColor').addEventListener('click', () => {
+  saveSharedBackground('color', $('sharedBgColor').value);
+});
 
-  if (!colorInput || !fileInput || !status) return;
+document.querySelectorAll('[data-shared-color]').forEach(button => {
+  button.addEventListener('click', () => {
+    $('sharedBgColor').value = button.dataset.sharedColor;
+    saveSharedBackground('color', button.dataset.sharedColor);
+  });
+});
 
-  function showBackground(type, value) {
-    if (type === 'image') {
-      document.body.style.backgroundImage =
-        'linear-gradient(#09090c66,#09090c88),url("' + value + '")';
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-    } else {
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundColor = value || '#101012';
-    }
+$('sharedBgUpload').addEventListener('click', async () => {
+  const file = $('sharedBgFile').files[0];
+  if (!file) {
+    $('sharedBgStatus').textContent = 'Előbb válassz ki egy képet!';
+    return;
+  }
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    $('sharedBgStatus').textContent = 'JPG, PNG vagy WEBP képet válassz!';
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    $('sharedBgStatus').textContent = 'A kép legfeljebb 5 MB lehet!';
+    return;
+  }
+  if (!currentUser) {
+    $('sharedBgStatus').textContent = 'Előbb jelentkezz be!';
+    return;
   }
 
-  async function saveBackground(type, value) {
-    if (!window.currentUser) {
-      status.textContent = 'Előbb jelentkezz be!';
-      return;
-    }
+  const extension = file.type === 'image/jpeg' ? 'jpg' :
+    file.type === 'image/png' ? 'png' : 'webp';
+  const path = currentUser.id + '/shared-' + Date.now() + '.' + extension;
 
-    status.textContent = 'Mentés...';
-
-    const { error } = await db
-      .from('chat_background')
-      .upsert({
-        id: 1,
-        background_type: type,
-        background_value: value,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'id' });
-
-    if (error) {
-      status.textContent = 'Mentési hiba: ' + error.message;
-      return;
-    }
-
-    showBackground(type, value);
-    status.textContent = 'A közös háttér elmentve!';
-  }
-
-  document.getElementById('sharedBgSaveColor').addEventListener('click', () => {
-    saveBackground('color', colorInput.value);
-  });
-
-  document.querySelectorAll('[data-shared-color]').forEach(button => {
-    button.addEventListener('click', () => {
-      colorInput.value = button.dataset.sharedColor;
-      saveBackground('color', button.dataset.sharedColor);
-    });
-  });
-
-  document.getElementById('sharedBgUpload').addEventListener('click', async () => {
-    const file = fileInput.files[0];
-
-    if (!file) {
-      status.textContent = 'Előbb válassz ki egy képet!';
-      return;
-    }
-
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      status.textContent = 'JPG, PNG vagy WEBP képet válassz!';
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      status.textContent = 'A kép legfeljebb 5 MB lehet!';
-      return;
-    }
-
-    const extension = file.type === 'image/jpeg' ? 'jpg' :
-      file.type === 'image/png' ? 'png' : 'webp';
-
-    const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + extension;
-
-    status.textContent = 'Kép feltöltése...';
-
-    const { data, error } = await db.storage
-      .from('chat-backgrounds')
-      .upload(path, file, { contentType: file.type });
-
-    if (error) {
-      status.textContent = 'Feltöltési hiba: ' + error.message;
-      return;
-    }
-
-    const { data: publicUrl } = db.storage
-      .from('chat-backgrounds')
-      .getPublicUrl(data.path);
-
-    await saveBackground('image', publicUrl.publicUrl);
-  });
-
-  document.getElementById('sharedBgReset').addEventListener('click', () => {
-    colorInput.value = '#101012';
-    saveBackground('color', '#101012');
-  });
-
-  const { data, error } = await db
-    .from('chat_background')
-    .select('background_type, background_value')
-    .eq('id', 1)
-    .maybeSingle();
+  $('sharedBgStatus').textContent = 'Kép feltöltése…';
+  const { data, error } = await db.storage.from('chat-backgrounds')
+    .upload(path, file, { upsert: false, contentType: file.type });
 
   if (error) {
-    status.textContent = 'Betöltési hiba: ' + error.message;
-  } else if (data) {
-    showBackground(data.background_type, data.background_value);
-    if (data.background_type === 'color') {
-      colorInput.value = data.background_value;
-    }
-  }
-})();
-// Predator Chat chatbotgomb és beszélgetési ablak
-const botButton = document.createElement('button');
-botButton.textContent = '🤖 Chatbot';
-botButton.style.cssText =
-  'position:fixed;right:20px;bottom:20px;z-index:9999;background:#d71935;color:white;border:1px solid #ff334f;border-radius:12px;padding:14px;cursor:pointer;font-weight:bold;';
-
-const botPanel = document.createElement('div');
-botPanel.style.cssText =
-  'display:none;position:fixed;right:20px;bottom:80px;width:min(340px,90vw);height:420px;max-height:70vh;z-index:9999;background:#111;color:white;border:1px solid #e21b36;border-radius:14px;padding:12px;box-shadow:0 0 20px #a00020;';
-
-botPanel.innerHTML = `
-  <div style="display:flex;justify-content:space-between;align-items:center;color:#ff334f;font-weight:bold">
-    <span>🤖 Predator Chatbot</span>
-    <button id="botClose" style="background:#b20e24;color:white;border:0;padding:6px 10px">X</button>
-  </div>
-  <div id="botMessages" style="height:290px;overflow:auto;margin:10px 0;padding:8px;background:#080808;border-radius:8px">
-    <p>Bot: Szia! Miben segíthetek?</p>
-  </div>
-  <form id="botForm" style="display:flex;gap:6px">
-    <input id="botInput" placeholder="Írj a chatbotnak..." required
-      style="min-width:0;flex:1;background:#222;color:white;border:1px solid #555;border-radius:8px;padding:9px">
-    <button style="background:#d71935;color:white;border:0;border-radius:8px;padding:9px">Küldés</button>
-  </form>
-`;
-
-document.body.append(botButton, botPanel);
-
-botButton.onclick = () => {
-  botPanel.style.display =
-    botPanel.style.display === 'none' ? 'block' : 'none';
-};
-
-botPanel.querySelector('#botClose').onclick = () => {
-  botPanel.style.display = 'none';
-};
-
-botPanel.querySelector('#botForm').onsubmit = async (event) => {
-  event.preventDefault();
-
-  const input = botPanel.querySelector('#botInput');
-  const messages = botPanel.querySelector('#botMessages');
-  const message = input.value.trim();
-  if (!message) return;
-
-  const userMessage = document.createElement('p');
-  userMessage.textContent = 'Te: ' + message;
-  messages.append(userMessage);
-  input.value = '';
-
-  const answer = document.createElement('p');
-  answer.textContent = 'Bot: Gondolkodom…';
-  messages.append(answer);
-  messages.scrollTop = messages.scrollHeight;
-
-  try {
-    const { data, error } = await db.functions.invoke(
-      'predator-chatbot',
-      { body: { message } }
-    );
-
-    answer.textContent = error
-      ? 'Bot: Most nem tudok válaszolni. Ellenőrizni kell a kapcsolatot.'
-      : 'Bot: ' + (data?.reply || 'Nem érkezett válasz.');
-  } catch {
-    answer.textContent = 'Bot: Nem sikerült kapcsolódni.';
+    $('sharedBgStatus').textContent = 'Feltöltési hiba: ' + error.message;
+    return;
   }
 
-  messages.scrollTop = messages.scrollHeight;
-};
+  const { data: urlData } = db.storage.from('chat-backgrounds')
+    .getPublicUrl(data.path);
+  await saveSharedBackground('image', urlData.publicUrl);
+  $('sharedBgStatus').textContent = $('backgroundStatus').textContent;
+});
+
+$('sharedBgReset').addEventListener('click', () => {
+  $('sharedBgColor').value = '#101012';
+  saveSharedBackground('color', '#101012');
+});
+
 </script>
 
 </body>
