@@ -7,10 +7,10 @@
 <meta name="description" content="Predator Chat – magyar online közösségi chat, chatszobákkal, profilokkal és üzenetküldéssel.">
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
-<link rel="canonical" href="https://roncsika38.github.io/predator.Chat/">
+<link rel="canonical" href="https://roncsika52-sys.github.io/predator.Chat/">
 <meta property="og:title" content="Predator Chat">
 <meta property="og:description" content="Csatlakozz a Predator Chat magyar közösségéhez!">
-<meta property="og:url" content="https://roncsika38.github.io/predator.Chat/">
+<meta property="og:url" content="https://roncsika52-sys.github.io/predator.Chat/">
 <meta property="og:type" content="website">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -430,7 +430,7 @@ header {
   "@type": "WebSite",
   "name": "Predator Chat",
   "alternateName": "PredatorChat",
-  "url": "https://roncsika38.github.io/predator.Chat/"
+  "url": "https://roncsika52-sys.github.io/predator.Chat/"
 }
 </script>
 
@@ -772,7 +772,7 @@ $('register').addEventListener('click', async () => {
       email,
       password,
       options: {
-        emailRedirectTo: 'https://roncsika38.github.io/predator.Chat/',
+        emailRedirectTo: 'https://roncsika52-sys.github.io/predator.Chat/',
         data: { username, display_name: username }
       }
     });
@@ -819,7 +819,7 @@ $('forgotPassword').addEventListener('click', async () => {
   status('Jelszó-visszaállító e-mail küldése…');
   try {
     const { error } = await db.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://roncsika38.github.io/predator.Chat/'
+      redirectTo: 'https://roncsika52-sys.github.io/predator.Chat/'
     });
     if (error) throw error;
     status('Ha ehhez az e-mail-címhez tartozik fiók, elküldtük a jelszó-visszaállító levelet. Nézd meg a Spam mappát is, és a legfrissebb levél linkjét nyisd meg.');
