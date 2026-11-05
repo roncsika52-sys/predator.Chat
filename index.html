@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -46,7 +47,7 @@ h2{font-size:21px}h3{font-size:17px}#roomTitle{font-size:19px;font-weight:bold}
 .hidden{display:none!important}.small{font-size:13px}
 .avatar{width:100px;height:100px;object-fit:cover;border-radius:50%;display:block;margin-bottom:12px;background:#29292f;border:2px solid var(--red)}
 #avatarFile{margin:10px 0}
-.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}.member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}.private-conversation-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}.secret-toggle{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:13px}.secret-toggle input{width:auto}.private-messages .secret-content{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.private-messages .secret-content input{max-width:220px}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
+.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}.member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-inline{margin-top:12px;min-width:0}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}.private-conversation-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}.secret-toggle{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:13px}.secret-toggle input{width:auto}.private-messages .secret-content{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.private-messages .secret-content input{max-width:220px}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
 @media(max-width:650px){header{padding:11px 10px;gap:7px}h1{font-size:18px}#userbar{max-width:28vw;font-size:11px}header>button{padding:9px;font-size:13px}main{padding:0 8px;margin:9px auto}.panel{padding:11px;border-radius:13px}.layout{grid-template-columns:1fr;gap:8px}#chat .layout>aside{margin-bottom:0}#chat .layout>aside h3{margin:0 0 6px}#chat .layout>aside p{margin:5px 0}#messages{height:calc(100dvh - 330px);min-height:240px;max-height:58vh}.msg{padding:10px 5px}.msg div{font-size:16px}.composer{position:sticky;bottom:4px;z-index:5}.composer input{font-size:16px;padding:11px 12px}.composer button{padding:11px 12px}.tabs button{font-size:13px;padding:10px}.auth{margin:15px auto}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 .msg .msg-head b { color: #ff5b70; }
@@ -265,7 +266,7 @@ button {
 </section>
 <section id="app" class="hidden">
   <nav class="tabs">
-  <button type="button" data-tab="chat" class="active">💬 Chat</button><button type="button" data-tab="music">🎵 Zene</button> <button type="button" data-tab="members">👥 Tagok</button><button type="button" data-tab="private">✉ Üzenetek</button><button type="button" data-tab="profile">👤 Profil</button><button type="button" data-tab="admin" id="adminTab" class="hidden">⚙ Admin</button>
+  <button type="button" data-tab="chat" class="active">💬 Chat</button><button type="button" data-tab="music">🎵 Zene</button> <button type="button" data-tab="members">👥 Tagok</button><button type="button" data-tab="profile">👤 Profil</button><button type="button" data-tab="admin" id="adminTab" class="hidden">⚙ Admin</button>
   </nav><section id="music" class="panel hidden">
   <h2>🎵 Predator Zene</h2>
   <p>Tölts fel zenét, vagy hallgasd meg a tagok által feltöltött zenéket!</p>
@@ -307,6 +308,7 @@ button {
       <input id="message" maxlength="2000" placeholder="Írd ide az üzeneted..." autocomplete="off"><input id="chatImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><button id="chooseChatImage" type="button" title="Kép csatolása">📷</button>
       <button type="submit">Küldés</button>
     </form>
+  <section id="private" class="panel hidden private-inline"><h2>Privát beszélgetés</h2><p class="muted small">A taglistában kattints annak a nevére, akinek írni szeretnél. Nem kell külön privát szobát keresned.</p><div class="private-conversation-head"><strong id="privateRecipientName">Nincs kiválasztott címzett</strong><button type="button" id="privateBackToMembers">Vissza a szobához</button></div><p id="privateStatus" class="muted" role="status"></p><div id="privateMessages" class="private-messages"></div><form id="privateSendForm" class="private-compose"><input id="privateMessage" maxlength="2000" placeholder="Privát üzenet…" autocomplete="off"><label class="secret-toggle"><input id="privateSecretMode" type="checkbox"> 🔒 Titkos írás</label><input id="privateSecretKey" class="hidden" type="password" maxlength="128" placeholder="Közös titkos jelszó" autocomplete="off"><button type="submit">Küldés</button></form><p class="muted small">Titkos írásnál a szöveg titkosítva kerül mentésre. A címzettnek ugyanazt a közös jelszót kell ismernie a visszafejtéshez; azt külön, biztonságos módon osszátok meg.</p></section>
   </section>
 
   <aside class="panel predator-members">
@@ -316,7 +318,6 @@ button {
   </aside>
 </section>
   <section id="members" class="panel hidden"><h2>Tagok</h2><p id="membersStatus" class="muted" role="status">Tagok betöltése…</p><div id="memberList" class="member-list"></div></section>
-  <section id="private" class="panel hidden"><h2>Privát beszélgetés</h2><p class="muted small">A taglistában kattints annak a nevére, akinek írni szeretnél. Nem kell külön privát szobát keresned.</p><div class="private-conversation-head"><strong id="privateRecipientName">Nincs kiválasztott címzett</strong><button type="button" id="privateBackToMembers">Tagok</button></div><p id="privateStatus" class="muted" role="status"></p><div id="privateMessages" class="private-messages"></div><form id="privateSendForm" class="private-compose"><input id="privateMessage" maxlength="2000" placeholder="Privát üzenet…" autocomplete="off"><label class="secret-toggle"><input id="privateSecretMode" type="checkbox"> 🔒 Titkos írás</label><input id="privateSecretKey" class="hidden" type="password" maxlength="128" placeholder="Közös titkos jelszó" autocomplete="off"><button type="submit">Küldés</button></form><p class="muted small">Titkos írásnál a szöveg titkosítva kerül mentésre. A címzettnek ugyanazt a közös jelszót kell ismernie a visszafejtéshez; azt külön, biztonságos módon osszátok meg.</p></section>
   <section id="profile" class="panel hidden">
     <h2>Profilom</h2><img id="avatarPreview" class="avatar" src="https://placehold.co/120x120?text=Profil" alt="Profilkép">
     <label for="displayName">Megjelenő név</label><input id="displayName" maxlength="32" placeholder="A chatben látható neved"><button type="button" id="saveDisplayName">Név mentése</button><p id="displayNameStatus" class="muted small"></p>
@@ -458,7 +459,9 @@ document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener
   const tab=button.dataset.tab;
   if(!$(tab))return;
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));
-  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.add('hidden'));
+  ['chat','music','members','profile','admin'].forEach(id=>$(id)?.classList.add('hidden'));
+  $('private')?.classList.add('hidden');
+  $('roomTitle')?.classList.remove('hidden');$('messages')?.classList.remove('hidden');$('sendForm')?.classList.remove('hidden');
   $(tab).classList.remove('hidden');
   if(tab==='members')loadMembers();
   if(tab==='private' && privateRecipientId)loadPrivateMessages();
@@ -512,6 +515,11 @@ async function loadProfileCache(){if(!currentUser)return;const {data,error}=awai
 async function renderMessage(m){if(!m||String(m.room_id)!==String(currentRoom?.id))return;if($('messages').querySelector('[data-id="'+CSS.escape(String(m.id))+'"]'))return;const profile=profileCache.get(String(m.sender_id))||{};const item=document.createElement('div');item.className='msg';item.dataset.id=String(m.id);const avatar=document.createElement('img');avatar.className='msg-avatar';avatar.alt='Profilkép';avatar.src=profile.avatar_url||DEFAULT_AVATAR;const content=document.createElement('div');content.className='msg-content';const head=document.createElement('div');head.className='msg-head';const name=document.createElement('b');
 name.textContent = profile.display_name ||
   (String(m.sender_id) === String(currentUser?.id) ? 'Te' : 'Tag');
+if (profile.id && String(profile.id) !== String(currentUser?.id)) {
+  name.style.cursor = 'pointer';
+  name.title = 'Privát üzenet írása';
+  name.addEventListener('click', () => openPrivateChat(profile));
+}
 
 if (String(m.sender_id) === OWNER_USER_ID) {
   const police = document.createElement('span');
@@ -748,9 +756,13 @@ async function openPrivateChat(profile){
   if(!profile || String(profile.id)===String(currentUser.id))return;
   privateRecipientProfile=profile;
   privateRecipientId=String(profile.id);
-  $('privateRecipientName').textContent='Beszélgetés: '+(profile.display_name||profile.email||'Tag');
-  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='private'));
-  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='private'));
+  $('privateRecipientName').textContent='Privát beszélgetés: '+(profile.display_name||profile.email||'Tag');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='chat'));
+  ['chat','music','members','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='chat'));
+  $('roomTitle').classList.add('hidden');
+  $('messages').classList.add('hidden');
+  $('sendForm').classList.add('hidden');
+  $('private').classList.remove('hidden');
   await loadPrivateMessages();
   $('privateMessage').focus();
 }
@@ -852,7 +864,7 @@ async function loadPrivateMessages(){
   for(const m of data)appendPrivateMessage(m);
   box.scrollTop=box.scrollHeight;
 }
-$('privateBackToMembers').addEventListener('click',()=>document.querySelector('[data-tab="members"]').click());
+$('privateBackToMembers').addEventListener('click',()=>{ $('private').classList.add('hidden'); $('roomTitle').classList.remove('hidden'); $('messages').classList.remove('hidden'); $('sendForm').classList.remove('hidden'); privateRecipientId=''; privateRecipientProfile=null; });
 $('privateSecretMode').addEventListener('change',e=>{
   $('privateSecretKey').classList.toggle('hidden',!e.target.checked);
   if(e.target.checked)$('privateSecretKey').focus();else $('privateSecretKey').value='';
@@ -869,7 +881,7 @@ $('privateSendForm').addEventListener('submit',async e=>{
     try{body=await encryptPrivateText(body,pass);}catch(err){setPrivateStatus('Titkosítási hiba: '+(err?.message||'Ismeretlen hiba'));return}
   }
   const btn=$('privateSendForm').querySelector('button[type="submit"]');btn.disabled=true;setPrivateStatus('Üzenet küldése…');
-  const payload={sender_id:currentUser.id,recipient_id:recipient,body};
+  const payload={room_id:null,sender_id:currentUser.id,recipient_id:recipient,body};
   try {
     const {error}=await db.from('messages').insert(payload);
     if(error){setPrivateStatus('Nem sikerült elküldeni: '+error.message+' — a messages tábla privátüzenet-szabályát és a room_id mező követelményét az adatbázisban kell ellenőrizni.');return}
@@ -1031,7 +1043,8 @@ $('onlineMembersStatus').textContent='Nincs online tag';
   $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?(profileCache.get(String(currentUser.id))?.display_name||currentUser.user_metadata?.username||currentUser.email||'Bejelentkezve'):'Nincs bejelentkezve';
   // Minden új munkamenet a chat nézettel indul; korábbi admin/profil nézet nem maradhat nyitva.
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='chat'));
-  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='chat'));
+  ['chat','music','members','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='chat'));
+  $('private').classList.add('hidden');$('roomTitle').classList.remove('hidden');$('messages').classList.remove('hidden');$('sendForm').classList.remove('hidden');
   if(!loggedIn){
     if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}
     if(onlinePresenceChannel){db.removeChannel(onlinePresenceChannel);onlinePresenceChannel=null}
@@ -1127,3 +1140,4 @@ $('sharedBgReset').addEventListener('click', () => {
 
 </body>
 </html>
+```
