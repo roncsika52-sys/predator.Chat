@@ -7,10 +7,10 @@
 <meta name="description" content="Predator Chat – magyar online közösségi chat, chatszobákkal, profilokkal és üzenetküldéssel.">
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
-<link rel="canonical" href="https://roncsika52-sys.github.io/predator.Chat/">
+<link rel="canonical" href="https://roncsika38.github.io/predator.Chat/">
 <meta property="og:title" content="Predator Chat">
 <meta property="og:description" content="Csatlakozz a Predator Chat magyar közösségéhez!">
-<meta property="og:url" content="https://roncsika52-sys.github.io/predator.Chat/">
+<meta property="og:url" content="https://roncsika38.github.io/predator.Chat/">
 <meta property="og:type" content="website">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -338,23 +338,6 @@ h2,h3{margin-top:6px;color:#fff}
 #predatorRadioOpen{color:#ff6475}
 @media(max-width:620px){#predatorRadioPlayer{padding:12px;margin:10px 0}}
 </style>
-
-
-<style id="predator-games-style">
-#games .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;margin-top:16px}
-#games .game-card{background:linear-gradient(145deg,#1b0b10,#09090d);border:1px solid #8d1b30;border-radius:16px;padding:16px;min-width:0}
-#games .game-card h3{margin-top:0;color:#ff6475}
-#games .game-status{min-height:24px;color:#ffc0c8;font-weight:600;margin:12px 0}
-#games .dice-face{font-size:76px;text-align:center;padding:14px;line-height:1.2}
-#games .dice-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-#games .xo-board{display:grid;grid-template-columns:repeat(3,minmax(60px,90px));gap:7px;justify-content:center;margin:14px auto}
-#games .xo-cell{height:clamp(60px,18vw,90px);font-size:clamp(30px,8vw,46px);font-weight:800;padding:0;background:#17080d;border:1px solid #a52b42;border-radius:12px;color:#fff}
-#games .xo-cell:disabled{opacity:1;cursor:default}
-#games .xo-cell.x{color:#ff5368}#games .xo-cell.o{color:#fff}
-#games .game-note{font-size:13px;color:#bdbdc7}
-</style>
-
-
 <style id="predator-real-transparent-ui">
 /* Valóban áttetsző felületek: a mögöttes chat-háttér maradjon jól látható. */
 #app, #chat, #chat.layout, #chat.predator-layout,
@@ -366,8 +349,8 @@ h2,h3{margin-top:6px;color:#fff}
 #chat.predator-layout > aside,
 #chat.predator-layout > section,
 #auth.panel,
-#members.panel, #private.panel, #profile.panel, #vip.panel,
-#admin.panel, #music.panel, #radio.panel, #games.panel {
+#members.panel, #private.panel, #profile.panel,
+#admin.panel, #music.panel, #radio.panel {
   background: rgba(7, 7, 12, 0.12) !important;
   background-image: none !important;
   border: 1px solid rgba(255, 45, 70, 0.48) !important;
@@ -430,7 +413,7 @@ header {
   "@type": "WebSite",
   "name": "Predator Chat",
   "alternateName": "PredatorChat",
-  "url": "https://roncsika52-sys.github.io/predator.Chat/"
+  "url": "https://roncsika38.github.io/predator.Chat/"
 }
 </script>
 
@@ -472,34 +455,8 @@ header {
 </section>
 <section id="app" class="hidden">
   <nav class="tabs">
-  <button data-tab="chat" class="active">🏠 Főoldal / Chat</button><button data-tab="music">🎵 Zene</button><button data-tab="radio">📻 Rádió</button><button data-tab="games">🎮 Játékok</button><button data-tab="chat">▣ Szobák</button><button data-tab="members">👥 Felhasználók</button><button data-tab="private">✉ Privát üzenetek</button><button data-tab="profile">👤 Profil</button><button data-tab="vip">🛒 VIP Bolt</button><button data-tab="admin" id="adminTab" class="hidden">♛ Adminpanel</button>
+  <button data-tab="chat" class="active">🏠 Főoldal / Chat</button><button data-tab="music">🎵 Zene</button><button data-tab="radio">📻 Rádió</button><button data-tab="chat">▣ Szobák</button><button data-tab="members">👥 Felhasználók</button><button data-tab="private">✉ Privát üzenetek</button><button data-tab="profile">👤 Profil</button><button data-tab="admin" id="adminTab" class="hidden">♛ Adminpanel</button>
   </nav>
-<section id="games" class="panel hidden">
-  <h2>🎮 Predator Játékok</h2>
-  <p class="muted">Játssz egy gyors kockadobást, vagy hívd ki a melletted ülőt egy X–O párbajra. Ezek a játékok jelenleg ezen az eszközön futnak.</p>
-  <div class="games-grid">
-    <div class="game-card">
-      <h3>🎲 Kockadobás</h3>
-      <p>Nyomj a dobásra, és nézd meg, hányast dobtál!</p>
-      <div id="diceFace" class="dice-face" aria-live="polite">⚀</div>
-      <div class="dice-controls"><button id="rollDice">🎲 Dobás</button><button id="resetDice" type="button">Új kör</button></div>
-      <p id="diceStatus" class="game-status" aria-live="polite">Készen állsz a dobásra?</p>
-      <p id="diceScore" class="game-note">Dobások: 0 · Összesen: 0</p>
-    </div>
-    <div class="game-card">
-      <h3>❌⭕ X–O játék</h3>
-      <p>Két játékos felváltva lép ugyanazon az eszközön. Az nyer, aki előbb kirak három jelet egy sorba.</p>
-      <p id="xoStatus" class="game-status" aria-live="polite">X következik</p>
-      <div id="xoBoard" class="xo-board" role="group" aria-label="X–O játéktábla">
-        <button class="xo-cell" data-cell="0" aria-label="1. mező"></button><button class="xo-cell" data-cell="1" aria-label="2. mező"></button><button class="xo-cell" data-cell="2" aria-label="3. mező"></button>
-        <button class="xo-cell" data-cell="3" aria-label="4. mező"></button><button class="xo-cell" data-cell="4" aria-label="5. mező"></button><button class="xo-cell" data-cell="5" aria-label="6. mező"></button>
-        <button class="xo-cell" data-cell="6" aria-label="7. mező"></button><button class="xo-cell" data-cell="7" aria-label="8. mező"></button><button class="xo-cell" data-cell="8" aria-label="9. mező"></button>
-      </div>
-      <div class="dice-controls"><button id="xoRestart" type="button">🔄 Új játék</button></div>
-      <p id="xoScore" class="game-note">X győzelmek: 0 · O győzelmek: 0 · Döntetlen: 0</p>
-    </div>
-  </div>
-</section>
 <section id="music" class="panel hidden">
   <h2>🎵 Predator Zene</h2>
   <p>Tölts fel zenét, vagy hallgasd meg a tagok által feltöltött zenéket!</p>
@@ -610,33 +567,13 @@ header {
   <p id="sharedBgStatus" role="status"></p>
 </section>
   </section>
-  <section id="vip" class="panel hidden">
-    <h2>🛒 Predator VIP Bolt</h2>
-    <p class="muted">Vásárolj színes nevet, VIP-jelvényt vagy profilkeretet a chatérméidből.</p>
-    <p><strong>Érmeegyenleg:</strong> <span id="vipCoinBalance">Betöltés…</span></p>
-    <p id="vipShopStatus" role="status" class="muted small"></p>
-    <div id="vipShopItems" class="member-list"></div>
-    <p class="muted small">Az érmefeltöltés és a valódi pénzes fizetés külön beállítást igényel. Ne adj meg bankkártyaadatot ezen az oldalon.</p>
-  </section>
-  <section id="admin" class="panel hidden">
+<section id="admin" class="panel hidden">
     <h2>Adminpanel</h2><p id="adminStatus" role="status">Adminjog ellenőrzése…</p>
     <p class="muted">A jogosultságokat az adatbázis ellenőrzi. A szerepkör kiosztását a szerveroldali függvény védi.</p>
     <div id="roomAdminTools" class="panel hidden">
       <h3>💬 Szoba létrehozása</h3>
       <form id="createRoomForm" class="form"><input id="newRoomName" maxlength="60" placeholder="Új szoba neve" required><button type="submit">Szoba létrehozása</button></form>
       <p id="roomAdminStatus" class="muted" role="status"></p>
-    </div>
-    <div id="vipAdminTools" class="panel hidden">
-      <h3>👑 VIP-jogosultság kezelése</h3>
-      <p class="muted">Csak a Predator Chat tulajdonosa adhat vagy vehet el ingyenes VIP-et.</p>
-      <form id="vipAdminForm" class="form">
-        <input id="vipTargetUsername" placeholder="Tag megjelenő neve" autocomplete="off" minlength="3" maxlength="32" required>
-        <div class="actions">
-          <button type="submit">👑 Ingyenes VIP adása</button>
-          <button type="button" id="removeVipButton" style="background:#29292f;border:1px solid #555">VIP elvétele</button>
-        </div>
-      </form>
-      <p id="vipAdminStatus" class="muted" role="status"></p>
     </div>
     <div id="roleAdminTools" class="panel hidden">
       <h3>🔐 Szerepkör kezelése</h3>
@@ -660,7 +597,6 @@ const $ = id => document.getElementById(id);
 let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',onlinePresenceChannel=null,onlineUserIds=new Set(),isPredatorAdmin=false,isPredatorOwner=false,moderationPollTimer=null,moderationExitInProgress=false;
 const profileCache=new Map();
 const predatorRoleCache=new Map();
-const vipUserIds=new Set();
 async function getPredatorRole(userId){
   const id=String(userId||'');
   if(!id)return 'member';
@@ -772,7 +708,7 @@ $('register').addEventListener('click', async () => {
       email,
       password,
       options: {
-        emailRedirectTo: 'https://roncsika52-sys.github.io/predator.Chat/',
+        emailRedirectTo: 'https://roncsika38.github.io/predator.Chat/',
         data: { username, display_name: username }
       }
     });
@@ -819,7 +755,7 @@ $('forgotPassword').addEventListener('click', async () => {
   status('Jelszó-visszaállító e-mail küldése…');
   try {
     const { error } = await db.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://roncsika52-sys.github.io/predator.Chat/'
+      redirectTo: 'https://roncsika38.github.io/predator.Chat/'
     });
     if (error) throw error;
     status('Ha ehhez az e-mail-címhez tartozik fiók, elküldtük a jelszó-visszaállító levelet. Nézd meg a Spam mappát is, és a legfrissebb levél linkjét nyisd meg.');
@@ -831,7 +767,7 @@ $('forgotPassword').addEventListener('click', async () => {
 });
 $('newPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const p1=$('newPassword').value,p2=$('newPasswordAgain').value;if(p1.length<6){status('A jelszónak legalább 6 karakteresnek kell lennie.');return}if(p1!==p2){status('A két jelszó nem egyezik.');return}status('Jelszó mentése…');const {error}=await db.auth.updateUser({password:p1});if(error){status('Nem sikerült megváltoztatni a jelszót: '+error.message);return}status('Sikerült megváltoztatni a jelszót.');$('newPasswordForm').reset();showRecovery(false);await db.auth.signOut();history.replaceState(null,'',location.pathname)});
 $('logout').addEventListener('click',async()=>{await db.auth.signOut()});
-document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));['chat','music','radio','games','members','private','profile','vip','admin'].forEach(id=>$(id).classList.add('hidden'));$(button.dataset.tab).classList.remove('hidden');if(button.dataset.tab==='members')loadMembers();if(button.dataset.tab==='private')loadPrivateMessages();if(button.dataset.tab==='vip')loadVipShop()})});
+document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));['chat','music','radio','members','private','profile','admin'].forEach(id=>$(id).classList.add('hidden'));$(button.dataset.tab).classList.remove('hidden');if(button.dataset.tab==='members')loadMembers();if(button.dataset.tab==='private')loadPrivateMessages()})});
 const OWNER_USER_ID='aef906e3-f704-4a28-b3c2-6a1373c5c4f5';
 async function checkAdmin(){
   const {data,error}=await db.from('chat_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
@@ -839,7 +775,7 @@ async function checkAdmin(){
   if(error){
     $('adminTab').classList.toggle('hidden',!isOwner);
     $('roomAdminTools').classList.toggle('hidden',!isOwner);
-    $('roleAdminTools').classList.toggle('hidden',!isOwner);$('vipAdminTools').classList.toggle('hidden',!isOwner);
+    $('roleAdminTools').classList.toggle('hidden',!isOwner);
     $('sharedBackground').classList.toggle('hidden',!isOwner);
     $('adminStatus').textContent='Adminellenőrzési hiba: '+error.message+(isOwner?' A tulajdonosi azonosító egyezik.':'');
     return;
@@ -848,33 +784,10 @@ async function checkAdmin(){
   isPredatorOwner=!!isOwner; isPredatorAdmin=!!isAdmin;
   $('adminTab').classList.toggle('hidden',!isAdmin);
   $('roomAdminTools').classList.toggle('hidden',!isAdmin);
-  $('roleAdminTools').classList.toggle('hidden',!isOwner);$('vipAdminTools').classList.toggle('hidden',!isOwner);
+  $('roleAdminTools').classList.toggle('hidden',!isOwner);
   $('sharedBackground').classList.toggle('hidden',!isOwner);
   $('adminStatus').textContent=isAdmin?(isOwner?'Tulajdonosi fiókkal vagy belépve.':'Adminisztrátori fiókkal vagy belépve.'):'Ehhez a fiókhoz nincs adminjog. A tulajdonosi azonosítót és a chat_roles táblát ellenőrizni kell.';
 }
-async function setVipForUsername(active){
-  const username=$('vipTargetUsername').value.trim();
-  const out=$('vipAdminStatus');
-  if(!currentUser || String(currentUser.id)!==OWNER_USER_ID){out.textContent='Ehhez csak a tulajdonosi fiók jogosult.';return;}
-  if(username.length<3){out.textContent='Írd be a tag legalább 3 karakteres megjelenő nevét.';return;}
-  const buttons=$('vipAdminForm').querySelectorAll('button');
-  buttons.forEach(b=>b.disabled=true);
-  out.textContent=active?'VIP-jogosultság adása…':'VIP-jogosultság visszavonása…';
-  try{
-    const {data,error}=await db.rpc('predator_admin_set_vip_by_username',{p_username:username,p_active:active});
-    if(error)throw error;
-    out.textContent=active?'Sikeresen ingyen VIP-et adtál ennek a tagnak: '+username+'.':'A VIP-jogosultságot visszavontad ennél a tagnál: '+username+'.';
-    $('vipTargetUsername').value='';
-    await loadVipMemberships();
-    if(currentRoom) await loadMessages();
-    await renderOnlineMembers();
-  }catch(err){
-    out.textContent='Nem sikerült: '+(err?.message||'Ismeretlen hiba')+'. Ellenőrizd, hogy a VIP-admin SQL lefutott-e.';
-  }finally{buttons.forEach(b=>b.disabled=false);}
-}
-$('vipAdminForm').addEventListener('submit',async e=>{e.preventDefault();await setVipForUsername(true);});
-$('removeVipButton').addEventListener('click',async()=>{await setVipForUsername(false);});
-
 $('createRoomForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!currentUser){$('roomAdminStatus').textContent='Előbb jelentkezz be.';return}
   const name=$('newRoomName').value.trim();if(!name){$('roomAdminStatus').textContent='Írd be a szoba nevét.';return}
@@ -907,14 +820,12 @@ async function loadRooms(){
 }
 function selectRoom(room){currentRoom=room;const name=room.name||room.title||room.slug||'Szoba';$('roomTitle').textContent=name;document.querySelectorAll('#rooms button').forEach(b=>b.classList.toggle('active',b.textContent==='💬 '+name));if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}loadMessages();messageChannel=db.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},payload=>renderMessage(payload.new)).subscribe()}
 async function loadProfileCache(){if(!currentUser)return;const {data,error}=await db.from('profiles').select('id,display_name,avatar_url').limit(500);if(error){console.warn('Profilképek betöltése:',error.message);return}(data||[]).forEach(p=>profileCache.set(String(p.id),p));const mine=profileCache.get(String(currentUser.id));if(mine?.avatar_url)$('avatarPreview').src=mine.avatar_url;else $('avatarPreview').src=DEFAULT_AVATAR}
-async function loadVipMemberships(){vipUserIds.clear();if(!currentUser)return;const {data,error}=await db.from('vip_memberships').select('user_id').eq('active',true).limit(1000);if(error){console.warn('VIP-jelvények nem tölthetők be:',error.message);return}(data||[]).forEach(row=>vipUserIds.add(String(row.user_id)));}
 async function renderMessage(m){if(!m||String(m.room_id)!==String(currentRoom?.id))return;if($('messages').querySelector('[data-id="'+CSS.escape(String(m.id))+'"]'))return;const profile=profileCache.get(String(m.sender_id))||{};const item=document.createElement('div');item.className='msg';item.dataset.id=String(m.id);const avatar=document.createElement('img');avatar.className='msg-avatar';avatar.alt='Profilkép';avatar.src=profile.avatar_url||DEFAULT_AVATAR;const content=document.createElement('div');content.className='msg-content';const head=document.createElement('div');head.className='msg-head';const name=document.createElement('b');
 name.textContent = profile.display_name ||
   (String(m.sender_id) === String(currentUser?.id) ? 'Te' : 'Tag');
 const senderRole=String(m.sender_id)===OWNER_USER_ID?'owner':await getPredatorRole(m.sender_id);
 appendPoliceBadge(name,senderRole);
-if(vipUserIds.has(String(m.sender_id))){const vipBadge=document.createElement('span');vipBadge.textContent=' 👑 VIP';vipBadge.className='vip-badge';vipBadge.title='VIP-tag';vipBadge.style.cssText='color:#ffd45a;font-weight:800;font-size:12px;margin-left:4px';name.append(vipBadge);}
-                              const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';const body=document.createElement('div');body.className='message-body';const match=String(m.body||'').match(/^\[\[PREDATOR_IMAGE:(.+?)\]\](?: (.*))?$/);if(match){const {data,error}=await db.storage.from('chat-images').createSignedUrl(match[1].trim().replace(/^\/+/,'').replace(/^chat-images\//,''),3600);if(error){body.textContent='A kép nem tölthető be: '+error.message}else{if(match[2])body.append(document.createTextNode(match[2]));const img=document.createElement('img');img.className='chat-image';img.alt='Elküldött kép';img.src=data.signedUrl;img.loading='lazy';body.append(img)}}else{body.textContent=m.body||''}head.append(name,time);content.append(head,body);item.append(avatar,content);$('messages').append(item);$('messages').scrollTop=$('messages').scrollHeight}
+const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';const body=document.createElement('div');body.className='message-body';const match=String(m.body||'').match(/^\[\[PREDATOR_IMAGE:(.+?)\]\](?: (.*))?$/);if(match){const {data,error}=await db.storage.from('chat-images').createSignedUrl(match[1].trim().replace(/^\/+/,'').replace(/^chat-images\//,''),3600);if(error){body.textContent='A kép nem tölthető be: '+error.message}else{if(match[2])body.append(document.createTextNode(match[2]));const img=document.createElement('img');img.className='chat-image';img.alt='Elküldött kép';img.src=data.signedUrl;img.loading='lazy';body.append(img)}}else{body.textContent=m.body||''}head.append(name,time);content.append(head,body);item.append(avatar,content);$('messages').append(item);$('messages').scrollTop=$('messages').scrollHeight}
 async function loadMessages(){$('messages').replaceChildren();if(!currentRoom)return;const {data,error}=await db.from('messages').select('id,sender_id,room_id,body,created_at').eq('room_id',currentRoom.id).is('recipient_id',null).order('created_at',{ascending:true}).limit(100);if(error){chatStatus('Nem tölthetők be az üzenetek: '+error.message);return}const ids=[...new Set((data||[]).map(m=>String(m.sender_id)))].filter(id=>!profileCache.has(id));if(ids.length){const {data:profiles}=await db.from('profiles').select('id,display_name,avatar_url').in('id',ids);(profiles||[]).forEach(p=>profileCache.set(String(p.id),p))}(data||[]).forEach(renderMessage);chatStatus('')}
 $('chooseChatImage').addEventListener('click',()=>$('chatImageFile').click());
 // Kép kiválasztásakor automatikusan küldjük el; nem kell hozzá szöveget írni vagy külön a Küldés gombra nyomni.
@@ -979,8 +890,7 @@ async function renderOnlineMembers(){
     const name=document.createElement('div');
     name.className='member-name';
     name.textContent=displayName;
-    if(vipUserIds.has(String(id))){const vipBadge=document.createElement('span');vipBadge.textContent=' 👑 VIP';vipBadge.title='VIP-tag';vipBadge.style.cssText='color:#ffd45a;font-weight:800;font-size:12px';name.append(vipBadge);}
-    const role=String(id)===OWNER_USER_ID?'owner':await getPredatorRole(id);
+const role=String(id)===OWNER_USER_ID?'owner':await getPredatorRole(id);
     appendPoliceBadge(name,role);
     name.classList.add('clickable-name'); name.title='Kattints a tagra'; name.addEventListener('click',()=>openMemberActions(p));
     row.style.cursor='pointer'; row.addEventListener('click',()=>openMemberActions(p));
@@ -1281,7 +1191,7 @@ $('onlineMembersStatus').textContent='Nincs online tag';
     }
   }
   $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?(profileCache.get(String(currentUser.id))?.display_name||currentUser.user_metadata?.username||currentUser.user_metadata?.display_name||'Bejelentkezve'):'Nincs bejelentkezve';
-  if(!loggedIn){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}currentRoom=null;$('messages').replaceChildren();$('adminTab').classList.add('hidden');$('roomAdminTools').classList.add('hidden');$('roleAdminTools').classList.add('hidden');$('vipAdminTools').classList.add('hidden');return}
+  if(!loggedIn){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}currentRoom=null;$('messages').replaceChildren();$('adminTab').classList.add('hidden');$('roomAdminTools').classList.add('hidden');$('roleAdminTools').classList.add('hidden');return}
   $('profileEmail').textContent='';$('displayName').value=profileCache.get(String(currentUser.id))?.display_name||currentUser.email?.split('@')[0]||'';
   const {data:myDetails,error:detailsError}=await db.from('profile_details')
     .select('age,city,gender').eq('user_id',currentUser.id).maybeSingle();
@@ -1297,7 +1207,6 @@ $('onlineMembersStatus').textContent='Nincs online tag';
   const {error:ownProfileError}=await db.from('profiles').upsert({id:currentUser.id,email:currentUser.email,display_name:currentUser.user_metadata?.username||currentUser.user_metadata?.display_name||oldProfile.display_name||currentUser.email?.split('@')[0]||'Tag',avatar_url:oldProfile.avatar_url||null},{onConflict:'id'});
   if(ownProfileError)console.warn('Saját profil létrehozása nem sikerült:',ownProfileError.message);
   await loadProfileCache();
-  await loadVipMemberships();
   // A szerver-adatbázisban rögzített kidobást/tiltást az aktív munkamenet is rendszeresen ellenőrzi.
   moderationPollTimer=setInterval(async()=>{
     if(!currentUser||moderationExitInProgress)return;
@@ -1323,39 +1232,6 @@ await checkAdmin();
 await loadRooms();
 await loadMembers();
 startOnlinePresence();
-}
-
-async function loadVipShop(){
-  const balance=$('vipCoinBalance'),itemsBox=$('vipShopItems'),shopStatus=$('vipShopStatus');
-  if(!currentUser){balance.textContent='Bejelentkezés szükséges';itemsBox.replaceChildren();return}
-  balance.textContent='Betöltés…';shopStatus.textContent='';itemsBox.replaceChildren();
-  const [{data:wallet,error:walletError},{data:items,error:itemsError},{data:purchases,error:purchasesError}]=await Promise.all([
-    db.from('vip_wallets').select('coins').eq('user_id',currentUser.id).maybeSingle(),
-    db.from('vip_items').select('id,name,price_coins').eq('active',true).order('price_coins'),
-    db.from('vip_purchases').select('item_id').eq('user_id',currentUser.id)
-  ]);
-  if(walletError){balance.textContent='Nem elérhető';shopStatus.textContent='Pénztárca-hiba: '+walletError.message;return}
-  balance.textContent=String(wallet?.coins ?? 0)+' érme';
-  if(itemsError){shopStatus.textContent='A termékek nem tölthetők be: '+itemsError.message;return}
-  if(purchasesError){shopStatus.textContent='A vásárlások nem tölthetők be: '+purchasesError.message;return}
-  const owned=new Set((purchases||[]).map(p=>p.item_id));
-  if(!items?.length){shopStatus.textContent='Jelenleg nincs elérhető VIP-termék.';return}
-  items.forEach(item=>{
-    const card=document.createElement('div');card.className='panel';card.style.margin='8px 0';
-    const title=document.createElement('h3');title.textContent=item.name;
-    const price=document.createElement('p');price.textContent='Ár: '+item.price_coins+' érme';
-    const button=document.createElement('button');button.type='button';
-    button.textContent=owned.has(item.id)?'Már megvásároltad':'Megvásárlás';
-    button.disabled=owned.has(item.id);
-    button.addEventListener('click',async()=>{
-      button.disabled=true;shopStatus.textContent='Vásárlás feldolgozása…';
-      const {data,error}=await db.rpc('buy_vip_item',{p_item_id:item.id});
-      if(error){shopStatus.textContent='Nem sikerült a vásárlás: '+error.message;button.disabled=false;return}
-      shopStatus.textContent='Sikeres vásárlás!';
-      await loadVipShop();
-    });
-    card.append(title,price,button);itemsBox.append(card);
-  });
 }
 
 db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){showRecovery(true);return}if(event==='SIGNED_OUT')recoveryMode=false;setTimeout(()=>showSession(session),0)});
@@ -1731,26 +1607,6 @@ async function moderateMember(action){
   chooseStation();
 })();
 </script>
-
-<script id="predator-games-script">
-(function(){
- const $g=id=>document.getElementById(id);
- const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅'];let diceRolls=0,diceTotal=0;
- const roll=$g('rollDice'),face=$g('diceFace'),diceStatus=$g('diceStatus'),diceScore=$g('diceScore');
- if(roll&&face&&diceStatus&&diceScore){
-  roll.addEventListener('click',()=>{const n=Math.floor(Math.random()*6)+1;face.textContent=diceFaces[n-1];diceRolls++;diceTotal+=n;diceStatus.textContent='Dobás eredménye: '+n+'!';diceScore.textContent='Dobások: '+diceRolls+' · Összesen: '+diceTotal;});
-  $g('resetDice').addEventListener('click',()=>{diceRolls=0;diceTotal=0;face.textContent='⚀';diceStatus.textContent='Készen állsz a dobásra?';diceScore.textContent='Dobások: 0 · Összesen: 0';});
- }
- const cells=[...document.querySelectorAll('#xoBoard [data-cell]')],xoStatus=$g('xoStatus'),xoScore=$g('xoScore');
- let board=Array(9).fill(''),turn='X',finished=false,score={X:0,O:0,draw:0};const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
- function updateScore(){xoScore.textContent='X győzelmek: '+score.X+' · O győzelmek: '+score.O+' · Döntetlen: '+score.draw;}
- function restart(){board=Array(9).fill('');turn='X';finished=false;cells.forEach(c=>{c.textContent='';c.disabled=false;c.classList.remove('x','o');});xoStatus.textContent='X következik';}
- cells.forEach(cell=>cell.addEventListener('click',()=>{const i=Number(cell.dataset.cell);if(finished||board[i])return;board[i]=turn;cell.textContent=turn;cell.classList.add(turn.toLowerCase());cell.disabled=true;const won=wins.some(line=>line.every(index=>board[index]===turn));if(won){finished=true;score[turn]++;xoStatus.textContent='🎉 '+turn+' nyert!';cells.forEach(c=>c.disabled=true);updateScore();return;}if(board.every(Boolean)){finished=true;score.draw++;xoStatus.textContent='🤝 Döntetlen!';updateScore();return;}turn=turn==='X'?'O':'X';xoStatus.textContent=turn+' következik';}));
- if($g('xoRestart'))$g('xoRestart').addEventListener('click',restart);updateScore();
-})();
-</script>
-
-
 <style>
 #predatorCallPanel{position:fixed;inset:0;z-index:10050;background:#000c;display:none;align-items:center;justify-content:center;padding:14px}
 #predatorCallCard{width:min(720px,100%);background:#100d12;border:1px solid #ff243c;border-radius:16px;padding:16px;color:#fff;box-shadow:0 12px 50px #000}
