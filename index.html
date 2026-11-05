@@ -210,6 +210,8 @@ button {
 @media(max-width:850px){.predator-layout{grid-template-columns:1fr}.predator-layout>main{padding:12px}}
   #chatImageFile{display:none}.chat-image{display:block;max-width:100%;max-height:420px;object-fit:contain;border-radius:12px;margin-top:8px}
 
+</style>
+<style>
 #onlineMemberList .member-item {
   display: flex;
   align-items: center;
@@ -232,26 +234,206 @@ button {
   flex: 1;
   min-width: 0;
 }
+  
+  </style>
 
-
-/* Finomított, reszponzív Predator elrendezés */
-.predator-layout{align-items:start}
-.predator-layout>.panel{min-width:0}
-#rooms{display:grid;gap:8px}
-#rooms button{text-align:left;width:100%}
-#onlineMemberList{max-height:65vh;overflow:auto}
-#sendForm input#message{min-width:0}
-#privateSendForm{align-items:center}
-@media(max-width:850px){
-  .predator-layout{grid-template-columns:minmax(0,1fr)}
-  .predator-layout>aside{order:initial}
-  #onlineMemberList{max-height:240px}
-  #messages{height:50vh;min-height:220px}
-}
-@media(min-width:851px){
-  .predator-layout{grid-template-columns:210px minmax(0,1fr) 240px}
-}
+<style>
+#privatePopupBackdrop{position:fixed;inset:0;background:#0009;z-index:10000;display:none;align-items:center;justify-content:center;padding:14px}
+#privatePopup{width:min(520px,100%);height:min(650px,88dvh);background:#15151b;border:1px solid #ed2438;border-radius:16px;box-shadow:0 20px 70px #000b;display:flex;flex-direction:column;overflow:hidden}
+#privatePopupHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;background:#09090c;border-bottom:1px solid #ed2438}
+#privatePopupTitle{font-weight:bold;overflow-wrap:anywhere}
+#privatePopupClose{padding:6px 11px;flex:0 0 auto}
+#privatePopupStatus{padding:5px 13px;color:#ff9aa8;font-size:12px;min-height:24px}
+#privatePopupMessages{flex:1;min-height:0;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.private-popup-message{max-width:88%;align-self:flex-start;background:#24242c;border:1px solid #393943;border-radius:12px;padding:9px 11px;overflow-wrap:anywhere;white-space:pre-wrap}
+.private-popup-message.mine{align-self:flex-end;background:#541521;border-color:#8b2435}
+.private-popup-time{display:block;font-size:10px;color:#c0c0ca;margin-top:4px}
+#privatePopupForm{display:flex;gap:8px;padding:10px;border-top:1px solid #34343e;background:#0d0d11}
+#privatePopupInput{flex:1;min-width:0}
+#privatePopupForm button{flex:0 0 auto}
+@media(max-width:600px){#privatePopupBackdrop{padding:0}#privatePopup{width:100%;height:100dvh;max-height:100dvh;border-radius:0}#privatePopupForm{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
 </style>
+
+
+<style id="predator-neon-redesign">
+:root{color-scheme:dark;--bg:#050507;--panel:#08080b;--panel2:#111116;--red:#ff172d;--red2:#b90820;--text:#f8f8fb;--muted:#a7a7b1;--line:#5c101c}
+html{background:#050507}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#2a0710 0,#09090c 44%,#030304 100%);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+header{min-height:94px;padding:12px 22px;background:linear-gradient(100deg,#09090b 0%,#170308 48%,#060607 100%);border-bottom:2px solid var(--red);box-shadow:0 4px 28px #ff10272a;gap:18px}
+h1{font-size:clamp(22px,2.5vw,34px);font-weight:900;letter-spacing:1px;text-transform:uppercase;text-shadow:0 0 16px #ff1b36a0}
+h1 span{color:#ff243c;text-shadow:0 0 18px #ff243c99}
+#userbar{margin-left:auto;font-size:13px;color:#ddd;max-width:30vw}
+button{background:linear-gradient(135deg,#ff233c,#b90820);border:1px solid #ff3449;color:#fff;border-radius:10px;box-shadow:0 3px 12px #ff10271a}
+button:hover{background:linear-gradient(135deg,#ff4054,#d20a27);box-shadow:0 0 16px #ff1c373d}
+input,select{background:#08080b;border-color:#4a252d;border-radius:10px}
+main{max-width:none;width:100%;margin:0 auto;padding:12px 14px}
+#app{width:100%}
+.tabs{display:flex;align-items:center;gap:7px;overflow-x:auto;flex-wrap:nowrap;background:#08080b;border:1px solid #40101b;border-radius:14px;padding:8px;margin:0 0 12px;scrollbar-width:thin}
+.tabs button{flex:0 0 auto;min-height:48px;padding:10px 15px;border:1px solid #35121a;background:linear-gradient(180deg,#0e0e12,#08080a);color:#eee;border-radius:11px;font-size:15px}
+.tabs button.active,.tabs button[data-tab="chat"].active{background:linear-gradient(135deg,#ff233c,#a90920);border-color:#ff263d;box-shadow:0 0 20px #ff173b38}
+.predator-layout{display:grid;grid-template-columns:minmax(210px,22%) minmax(0,1fr) minmax(220px,24%);gap:12px;align-items:stretch}
+.predator-layout>aside,.predator-layout>section{min-width:0;margin:0;background:linear-gradient(160deg,#09090c,#050507 75%);border:1px solid #e21a32;border-radius:14px;padding:14px;box-shadow:inset 0 0 22px #ff173b09,0 0 18px #ff173b0c}
+.predator-layout>section{background:radial-gradient(ellipse at 75% 0%,#26070e 0%,#08080b 50%,#050507 100%);padding:14px}
+h2,h3{margin-top:6px;color:#fff}
+#chat .predator-members{max-height:calc(100vh - 190px);overflow:auto}
+#rooms{display:grid;gap:7px}
+#rooms button{width:100%;text-align:left;display:block;background:linear-gradient(90deg,#1a090e,#0b0b0e);border:1px solid #3c151e;border-radius:10px;padding:11px 12px}
+#rooms button.active{background:linear-gradient(100deg,#a60a20,#39070f);border-color:#ff263d;box-shadow:inset 0 0 18px #ff20301f}
+.neon-divider{border:0;border-top:1px solid #7d1525;margin:15px 0}
+.direct-shortcut{width:100%;display:block;text-align:left;padding:8px 10px;margin:4px 0;background:transparent;border:1px solid transparent;box-shadow:none;color:#eee;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.direct-shortcut:hover{background:#24080f;border-color:#681322}
+#roomTitle{font-size:24px;color:#fff;margin:8px 0 4px}
+#chat .layout>aside h3,#chat h3{font-size:19px}
+#messages{height:calc(100vh - 430px);min-height:300px;max-height:650px;padding:5px 2px;gap:2px}
+.msg{border-bottom:1px solid #32121a;border-radius:8px;padding:11px 8px;background:#08080b44}
+.msg:hover{background:#ff183008}
+.msg-avatar{width:46px;height:46px;flex-basis:46px;border:2px solid #e31b35;box-shadow:0 0 10px #ff18351b}
+.msg .time{margin-left:auto;font-size:12px}
+.msg-content .message-body{font-size:17px}
+.composer{position:sticky;bottom:5px;z-index:4;margin-top:10px;background:#070709;border:1px solid #791629;border-radius:14px;padding:8px}
+.composer input{border-radius:10px;border-color:#5c2831}
+.composer button{border-radius:10px;padding:12px 15px}
+.member-list{display:grid;gap:6px}
+.member-item{display:flex;align-items:center;gap:10px;padding:7px 4px;border:0;border-radius:9px;background:transparent}
+.member-item img{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;border:1px solid #8b2435}
+#onlineMemberList .member-item{padding:7px 2px}
+#onlineMemberList .member-item img{width:42px;height:42px}
+.member-name{font-weight:700}
+#status,#chatStatus,#avatarStatus,#roomAdminStatus,#roleStatus{color:#ff9aa8}
+.panel{background:linear-gradient(145deg,#111116,#08080b);border:1px solid #4d1722;border-radius:14px;box-shadow:0 8px 25px #0008}
+#music,#members,#private,#profile,#admin{margin-top:12px}
+#privatePopup{background:#0b0b10!important;border:1px solid #ff1b36!important;box-shadow:0 0 55px #ff173b35!important}
+#privatePopupHeader{background:#08080b!important}
+#privatePopupMessages{background:radial-gradient(ellipse at top,#26070e,#09090c 70%)}
+.private-popup-message{background:#191920;border-color:#57202c}
+.private-popup-message.mine{background:#4a0b18;border-color:#c51b32}
+#privatePopupForm{background:#08080b}
+.auth{background:linear-gradient(145deg,#15080d,#08080b);border-color:#9e192d}
+@media(min-width:1200px){main{padding-left:18px;padding-right:18px}.predator-layout{grid-template-columns:minmax(230px,21%) minmax(0,1fr) minmax(245px,23%)}}
+@media(max-width:1000px) and (min-width:621px){.predator-layout{grid-template-columns:minmax(170px,22%) minmax(0,1fr) minmax(190px,24%);gap:8px}.predator-layout>aside,.predator-layout>section{padding:10px}#messages{height:50vh;min-height:260px}.msg-content .message-body{font-size:15px}}
+@media(max-width:620px){header{min-height:65px;padding:10px;gap:8px}h1{font-size:19px;letter-spacing:0}#userbar{max-width:25vw;font-size:10px}header>button{padding:8px;font-size:12px}main{padding:8px}.tabs{gap:5px;padding:5px}.tabs button{font-size:12px;padding:9px 11px;min-height:40px}.predator-layout{display:flex;flex-direction:column;gap:8px}.predator-layout>aside,.predator-layout>section{padding:11px}.predator-layout>section{order:1}.predator-layout>aside:first-child{order:0}.predator-layout>.predator-members{order:2;max-height:300px}.predator-layout>section{grid-column:auto;grid-row:auto}#messages{height:48vh;min-height:240px;max-height:500px}.msg-avatar{width:38px;height:38px;flex-basis:38px}.msg-content .message-body{font-size:15px}.composer{position:sticky;bottom:3px}.composer input{font-size:16px}.private-layout{grid-template-columns:1fr}}
+
+.member-name,.clickable-name,.msg-head b{cursor:pointer}
+.member-name:hover,.clickable-name:hover,.msg-head b:hover{text-decoration:underline;text-decoration-color:#ff243c}
+#memberActionBackdrop{position:fixed;inset:0;z-index:11000;display:none;align-items:center;justify-content:center;padding:14px;background:#000b}
+#memberActionCard{width:min(460px,100%);max-height:90dvh;overflow:auto;background:#0b0b10;border:1px solid #ff243c;border-radius:16px;padding:16px;box-shadow:0 15px 60px #000}
+#memberActionCard .actions{margin-top:10px}#memberActionCard button{min-width:100px}
+#moderationStatus{white-space:pre-wrap;color:#ff9aa8;font-size:13px}
+</style>
+
+
+
+
+<style id="predator-radio-tab-style">
+#radio.panel{min-height:300px}
+#predatorRadioPlayer{max-width:760px;margin:18px auto;padding:18px;background:linear-gradient(145deg,#17080d,#08080b);border:1px solid #8d1b30;border-radius:16px}
+#predatorRadioPlayer label{display:block;margin:12px 0 6px;font-weight:bold}
+.radio-catalog-box{max-width:900px;margin:18px auto;padding:14px;background:linear-gradient(145deg,#17080d,#08080b);border:1px solid #8d1b30;border-radius:16px}
+#predatorRadioCatalog{display:block;width:100%;height:260px;border:0;border-radius:10px;background:#08080b}
+.radio-catalog-box a{color:#ff6475}
+@media(max-width:620px){.radio-catalog-box{padding:10px;margin:10px 0}#predatorRadioCatalog{height:300px}}
+#predatorRadioSelect{width:100%;padding:12px}
+#predatorRadioAudio{display:block;width:100%;margin:16px 0 10px}
+#predatorRadioStatus{min-height:22px;color:#ff9aa8;font-size:13px}
+#predatorRadioOpen{color:#ff6475}
+@media(max-width:620px){#predatorRadioPlayer{padding:12px;margin:10px 0}}
+</style>
+
+
+<style id="predator-games-style">
+#games .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;margin-top:16px}
+#games .game-card{background:linear-gradient(145deg,#1b0b10,#09090d);border:1px solid #8d1b30;border-radius:16px;padding:16px;min-width:0}
+#games .game-card h3{margin-top:0;color:#ff6475}
+#games .game-status{min-height:24px;color:#ffc0c8;font-weight:600;margin:12px 0}
+#games .dice-face{font-size:76px;text-align:center;padding:14px;line-height:1.2}
+#games .dice-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#games .xo-board{display:grid;grid-template-columns:repeat(3,minmax(60px,90px));gap:7px;justify-content:center;margin:14px auto}
+#games .xo-cell{height:clamp(60px,18vw,90px);font-size:clamp(30px,8vw,46px);font-weight:800;padding:0;background:#17080d;border:1px solid #a52b42;border-radius:12px;color:#fff}
+#games .xo-cell:disabled{opacity:1;cursor:default}
+#games .xo-cell.x{color:#ff5368}#games .xo-cell.o{color:#fff}
+#games .game-note{font-size:13px;color:#bdbdc7}
+</style>
+
+
+<style id="predator-real-transparent-ui">
+/* Valóban áttetsző felületek: a mögöttes chat-háttér maradjon jól látható. */
+#app, #chat, #chat.layout, #chat.predator-layout,
+#chat .predator-layout, #messages {
+  background: transparent !important;
+  background-image: none !important;
+}
+.panel,
+#chat.predator-layout > aside,
+#chat.predator-layout > section,
+#auth.panel,
+#members.panel, #private.panel, #profile.panel, #vip.panel,
+#admin.panel, #music.panel, #radio.panel, #games.panel {
+  background: rgba(7, 7, 12, 0.12) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 45, 70, 0.48) !important;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.10) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  backdrop-filter: blur(2px) !important;
+}
+#chat.predator-layout > section {
+  background: rgba(7, 7, 12, 0.06) !important;
+}
+#messages, .msg, .member-item, #onlineMemberList .member-item,
+#rooms, #rooms button, .tabs {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+.msg {
+  border-bottom: 1px solid rgba(255, 55, 78, 0.18) !important;
+}
+.msg:hover, #rooms button:hover {
+  background: rgba(255,255,255,0.07) !important;
+}
+#rooms button {
+  border: 1px solid rgba(255, 55, 78, 0.28) !important;
+}
+#rooms button.active, .tabs button.active {
+  background: rgba(205, 15, 42, 0.58) !important;
+}
+.composer, #privatePopupForm, #privatePopupHeader {
+  background: rgba(5, 5, 9, 0.18) !important;
+  background-image: none !important;
+}
+.composer input, input, select, textarea {
+  background: rgba(5, 5, 9, 0.22) !important;
+}
+header {
+  background: rgba(5, 5, 8, 0.20) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  backdrop-filter: blur(2px) !important;
+}
+#privatePopup, #memberActionCard {
+  background: rgba(8, 8, 13, 0.18) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  backdrop-filter: blur(3px) !important;
+}
+#privatePopupMessages { background: transparent !important; }
+.private-popup-message { background: rgba(35, 25, 32, 0.22) !important; }
+.private-popup-message.mine { background: rgba(110, 12, 35, 0.24) !important; }
+</style>
+
+
+<meta name="application-name" content="Predator Chat">
+<meta property="og:site_name" content="Predator Chat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Predator Chat – Magyar online chat">
+<meta name="twitter:description" content="Csatlakozz a Predator Chat magyar közösségéhez!">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Predator Chat",
+  "alternateName": "PredatorChat",
+  "url": "https://roncsika38.github.io/predator.Chat/"
+}
+</script>
+
 </head>
 <body>
 <header>
@@ -261,16 +443,23 @@ button {
 </header>
 <main>
 <section id="auth" class="panel auth">
-  <div id="normalAuth">
-    <h2>Belépés / Regisztráció</h2>
-    <form id="authform" class="form">
-      <input id="username" type="text" placeholder="Felhasználónév (regisztrációhoz)" required minlength="3" maxlength="24" autocomplete="username">
-      <input id="email" type="email" placeholder="E-mail-cím" required autocomplete="email">
-      <input id="password" type="password" placeholder="Jelszó (legalább 6 karakter)" minlength="6" required autocomplete="current-password">
-      <div class="actions"><button type="submit">Bejelentkezés</button><button type="button" id="register">Regisztráció</button></div>
-      <button type="button" id="forgotPassword">Elfelejtett jelszó?</button>
-    </form>
-  </div>
+  
+<div id="normalAuth">
+  <form id="authform" class="form">
+    <input id="username" type="text" placeholder="Felhasználónév (belépéshez)" required minlength="3" maxlength="24" autocomplete="username">
+    <input id="email" type="email" placeholder="E-mail-cím (regisztrációhoz / jelszó-visszaállításhoz)" autocomplete="email">
+    <input id="password" type="password" placeholder="Jelszó (legalább 6 karakter)" minlength="6" required autocomplete="current-password">
+    <div class="actions">
+      <button type="submit">Bejelentkezés</button>
+      <button type="button" id="register">Regisztráció</button>
+    </div>
+    <button type="button" id="forgotPassword" style="background:#25252d;border:1px solid #5b2630">Elfelejtett jelszó</button>
+  </form>
+</div>
+
+   
+  
+ 
   <div id="recoveryForm" class="hidden">
     <h2>Új jelszó beállítása</h2><p>Adj meg egy új, legalább 6 karakteres jelszót.</p>
     <form id="newPasswordForm" class="form">
@@ -283,8 +472,35 @@ button {
 </section>
 <section id="app" class="hidden">
   <nav class="tabs">
-  <button type="button" data-tab="chat" class="active">💬 Chat</button><button type="button" data-tab="music">🎵 Zene</button> <button type="button" data-tab="members">👥 Tagok</button><button data-tab="private">✉ Üzenetek</button><button data-tab="profile">👤 Profil</button><button data-tab="admin" id="adminTab" class="hidden">⚙ Admin</button>
-  </nav><section id="music" class="panel hidden">
+  <button data-tab="chat" class="active">🏠 Főoldal / Chat</button><button data-tab="music">🎵 Zene</button><button data-tab="radio">📻 Rádió</button><button data-tab="games">🎮 Játékok</button><button data-tab="chat">▣ Szobák</button><button data-tab="members">👥 Felhasználók</button><button data-tab="private">✉ Privát üzenetek</button><button data-tab="profile">👤 Profil</button><button data-tab="vip">🛒 VIP Bolt</button><button data-tab="admin" id="adminTab" class="hidden">♛ Adminpanel</button>
+  </nav>
+<section id="games" class="panel hidden">
+  <h2>🎮 Predator Játékok</h2>
+  <p class="muted">Játssz egy gyors kockadobást, vagy hívd ki a melletted ülőt egy X–O párbajra. Ezek a játékok jelenleg ezen az eszközön futnak.</p>
+  <div class="games-grid">
+    <div class="game-card">
+      <h3>🎲 Kockadobás</h3>
+      <p>Nyomj a dobásra, és nézd meg, hányast dobtál!</p>
+      <div id="diceFace" class="dice-face" aria-live="polite">⚀</div>
+      <div class="dice-controls"><button id="rollDice">🎲 Dobás</button><button id="resetDice" type="button">Új kör</button></div>
+      <p id="diceStatus" class="game-status" aria-live="polite">Készen állsz a dobásra?</p>
+      <p id="diceScore" class="game-note">Dobások: 0 · Összesen: 0</p>
+    </div>
+    <div class="game-card">
+      <h3>❌⭕ X–O játék</h3>
+      <p>Két játékos felváltva lép ugyanazon az eszközön. Az nyer, aki előbb kirak három jelet egy sorba.</p>
+      <p id="xoStatus" class="game-status" aria-live="polite">X következik</p>
+      <div id="xoBoard" class="xo-board" role="group" aria-label="X–O játéktábla">
+        <button class="xo-cell" data-cell="0" aria-label="1. mező"></button><button class="xo-cell" data-cell="1" aria-label="2. mező"></button><button class="xo-cell" data-cell="2" aria-label="3. mező"></button>
+        <button class="xo-cell" data-cell="3" aria-label="4. mező"></button><button class="xo-cell" data-cell="4" aria-label="5. mező"></button><button class="xo-cell" data-cell="5" aria-label="6. mező"></button>
+        <button class="xo-cell" data-cell="6" aria-label="7. mező"></button><button class="xo-cell" data-cell="7" aria-label="8. mező"></button><button class="xo-cell" data-cell="8" aria-label="9. mező"></button>
+      </div>
+      <div class="dice-controls"><button id="xoRestart" type="button">🔄 Új játék</button></div>
+      <p id="xoScore" class="game-note">X győzelmek: 0 · O győzelmek: 0 · Döntetlen: 0</p>
+    </div>
+  </div>
+</section>
+<section id="music" class="panel hidden">
   <h2>🎵 Predator Zene</h2>
   <p>Tölts fel zenét, vagy hallgasd meg a tagok által feltöltött zenéket!</p>
 
@@ -309,7 +525,36 @@ button {
   <div id="musicList" class="member-list"></div>
 </section>
   
- <section id="chat" class="layout predator-layout">
+ 
+  <section id="radio" class="panel hidden">
+    <h2>📻 Predator Online Rádió</h2>
+    <p class="muted">A rádió külön menüpontban van, nem a taglistában. Az alábbi beépített lejátszóban a teljes rádiólistából választhatsz; a második lejátszóban a kiemelt adók is elérhetők.</p>
+    <div class="radio-catalog-box">
+      <h3>📻 Teljes rádióállomás-lista</h3>
+      <p class="muted small">Válassz rádióállomást és csatornát a lejátszóban, majd indítsd el a lejátszást.</p>
+      <iframe id="predatorRadioCatalog" title="Teljes online rádióállomás-lista és lejátszó" src="https://onlinestream.live/embed.cgi?id=2497&ch=1&volume=70&autoplay=0&channelselect=1&stationselect=1" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <p class="muted small">Ha a beágyazott lejátszó nem töltődik be, <a href="https://onlinestream.live/embedcode.cgi" target="_blank" rel="noopener noreferrer">nyisd meg a teljes rádiólistát külön</a>.</p>
+    </div>
+    <div id="predatorRadioPlayer">
+      <h3>⭐ Gyors választás – kedvelt állomások</h3>
+      <label for="predatorRadioSelect">Rádióállomás</label>
+      <select id="predatorRadioSelect">
+        <option value="https://icast.connectmedia.hu/5001/live.mp3" data-home="https://myonlineradio.hu/retro-radio">Retro Rádió</option>
+        <option value="https://icast.connectmedia.hu/5201/live.mp3" data-home="https://myonlineradio.hu/radio-1">Rádió 1</option>
+        <option value="https://mr-stream.connectmedia.hu/4738/mr2.mp3" data-home="https://myonlineradio.hu/petofi-radio">Petőfi Rádió</option>
+        <option value="https://icast.connectmedia.hu/4736/mr1.mp3" data-home="https://myonlineradio.hu/kossuth-radio">Kossuth Rádió</option>
+        <option value="https://slagerfm.netregator.hu:7813/slagerfm128.mp3" data-home="https://myonlineradio.hu/slager-fm">Sláger FM</option>
+        <option value="https://radio.musorok.org/listen/jazzy/jazzy.mp3" data-home="https://myonlineradio.hu/jazzy-radio">Jazzy Rádió</option>
+        <option value="https://rockerradio.online/live.mp3" data-home="https://myonlineradio.hu/rocker-radio">Rocker Rádió</option>
+      </select>
+      <audio id="predatorRadioAudio" controls preload="none" playsinline>
+        A böngésződ nem támogatja a beépített audiolejátszót.
+      </audio>
+      <p id="predatorRadioStatus" role="status">Válassz rádiót, majd kattints a lejátszásra.</p>
+      <a id="predatorRadioOpen" href="https://myonlineradio.hu/retro-radio" target="_blank" rel="noopener noreferrer">Állomás megnyitása a MyOnlineRadio.hu-n ↗</a>
+    </div>
+  </section>
+<section id="chat" class="layout predator-layout">
   <aside class="panel">
     <h3>🔴 Szobák</h3>
     <div id="rooms"></div>
@@ -339,8 +584,15 @@ button {
     <h2>Profilom</h2><img id="avatarPreview" class="avatar" src="https://placehold.co/120x120?text=Profil" alt="Profilkép">
     <label for="displayName">Megjelenő név</label><input id="displayName" maxlength="32" placeholder="A chatben látható neved"><button type="button" id="saveDisplayName">Név mentése</button><p id="displayNameStatus" class="muted small"></p>
     <label for="avatarFile">Profilkép kiválasztása</label><input id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
-    <button type="button" id="uploadAvatar">Profilkép feltöltése</button><p id="avatarStatus"></p><p id="profileEmail"></p><hr><h3>Háttérkép</h3><p class="muted small">A háttérkép ezen a böngészőn lesz elmentve.</p><input id="backgroundFile" type="file" accept="image/png,image/jpeg,image/webp">
-      <section class="panel" id="sharedBackground">
+    <button type="button" id="uploadAvatar">Profilkép feltöltése</button><p id="avatarStatus"></p><p id="profileEmail"></p>
+    <hr><h3>🪪 Adatlapom</h3>
+    <p class="muted small">Add meg az adataidat, ha szeretnéd. Ezeket az adatokat csak te látod és szerkesztheted ezen az adatlapon. Pontos lakcímet ne adj meg; elég a település vagy a megye.</p>
+    <label for="profileAge">Életkor</label><input id="profileAge" type="number" min="13" max="99" inputmode="numeric" placeholder="Életkorod">
+    <label for="profileCity">Hol laksz? (település vagy megye)</label><input id="profileCity" type="text" maxlength="80" autocomplete="address-level2" placeholder="Például: Szeged">
+    <label for="profileGender">Nem</label><select id="profileGender"><option value="">Nem szeretném megadni</option><option value="Nő">Nő</option><option value="Férfi">Férfi</option><option value="Egyéb">Egyéb</option></select>
+    <button type="button" id="saveProfileDetails">Adatlap mentése</button><p id="profileDetailsStatus" class="muted small" role="status"></p>
+    <hr><p class="muted small">A közös chat-háttér beállítását kizárólag a tulajdonos kezelheti.</p>
+       <section class="panel hidden" id="sharedBackground">
   <h2>🎨 Közös chat-háttér</h2>
   <p>Minden tagnál megjelenő háttér beállítása.</p>
   <label for="sharedBgColor">Háttérszín</label>
@@ -356,7 +608,15 @@ button {
   <button type="button" id="sharedBgUpload">Kép beállítása mindenkinek</button>
   <button type="button" id="sharedBgReset">Alap háttér visszaállítása</button>
   <p id="sharedBgStatus" role="status"></p>
-</section>                                                                                                                                                                                                                  <button type="button" id="uploadBackground">Háttérkép beállítása</button><button type="button" id="clearBackground">Háttérkép törlése</button><p id="backgroundStatus" class="muted small"></p>
+</section>
+  </section>
+  <section id="vip" class="panel hidden">
+    <h2>🛒 Predator VIP Bolt</h2>
+    <p class="muted">Vásárolj színes nevet, VIP-jelvényt vagy profilkeretet a chatérméidből.</p>
+    <p><strong>Érmeegyenleg:</strong> <span id="vipCoinBalance">Betöltés…</span></p>
+    <p id="vipShopStatus" role="status" class="muted small"></p>
+    <div id="vipShopItems" class="member-list"></div>
+    <p class="muted small">Az érmefeltöltés és a valódi pénzes fizetés külön beállítást igényel. Ne adj meg bankkártyaadatot ezen az oldalon.</p>
   </section>
   <section id="admin" class="panel hidden">
     <h2>Adminpanel</h2><p id="adminStatus" role="status">Adminjog ellenőrzése…</p>
@@ -366,12 +626,24 @@ button {
       <form id="createRoomForm" class="form"><input id="newRoomName" maxlength="60" placeholder="Új szoba neve" required><button type="submit">Szoba létrehozása</button></form>
       <p id="roomAdminStatus" class="muted" role="status"></p>
     </div>
+    <div id="vipAdminTools" class="panel hidden">
+      <h3>👑 VIP-jogosultság kezelése</h3>
+      <p class="muted">Csak a Predator Chat tulajdonosa adhat vagy vehet el ingyenes VIP-et.</p>
+      <form id="vipAdminForm" class="form">
+        <input id="vipTargetUsername" placeholder="Tag megjelenő neve" autocomplete="off" minlength="3" maxlength="32" required>
+        <div class="actions">
+          <button type="submit">👑 Ingyenes VIP adása</button>
+          <button type="button" id="removeVipButton" style="background:#29292f;border:1px solid #555">VIP elvétele</button>
+        </div>
+      </form>
+      <p id="vipAdminStatus" class="muted" role="status"></p>
+    </div>
     <div id="roleAdminTools" class="panel hidden">
       <h3>🔐 Szerepkör kezelése</h3>
-      <p class="muted">Csak a tulajdonosi fiók módosíthat szerepkört. A felhasználó UUID-ját a Supabase Authentication oldalán találod.</p>
+      <p class="muted">Írd be a tag chatben használt felhasználónevét. UUID-t nem kell megadnod.</p>
       <form id="roleForm" class="form">
-        <input id="targetUserId" placeholder="Felhasználó UUID" autocomplete="off" required>
-        <select id="targetRole" aria-label="Szerepkör"><option value="member">Tag</option><option value="admin">Admin</option></select>
+        <input id="targetUsername" placeholder="Felhasználónév" autocomplete="off" minlength="2" maxlength="32" required>
+        <select id="targetRole" aria-label="Szerepkör"><option value="member">Tag</option><option value="moderator">Moderátor</option><option value="admin">Admin</option></select>
         <button type="submit">Szerepkör mentése</button>
       </form>
       <p id="roleStatus" class="muted" role="status"></p>
@@ -385,72 +657,181 @@ const SUPABASE_URL = 'https://tmcbfjpwzeafixchsbqt.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_qRH3wqaMjDd0gPdvvzElBw_luhhqZLP';
 const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $ = id => document.getElementById(id);
-let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',onlinePresenceChannel=null,onlineUserIds=new Set();
+let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',onlinePresenceChannel=null,onlineUserIds=new Set(),isPredatorAdmin=false,isPredatorOwner=false,moderationPollTimer=null,moderationExitInProgress=false;
 const profileCache=new Map();
+const predatorRoleCache=new Map();
+const vipUserIds=new Set();
+async function getPredatorRole(userId){
+  const id=String(userId||'');
+  if(!id)return 'member';
+  if(id===OWNER_USER_ID)return 'owner';
+  if(predatorRoleCache.has(id))return predatorRoleCache.get(id);
+  let role='member';
+  const cachedProfile=profileCache.get(id);
+  if(String(cachedProfile?.role||'').toLowerCase()==='moderator') role='moderator';
+  try {
+    const {data,error}=await db.from('chat_roles').select('role').eq('user_id',id).maybeSingle();
+    if(!error&&data?.role) role=String(data.role).toLowerCase();
+  } catch(_) {}
+  predatorRoleCache.set(id,role);
+  return role;
+}
+function appendPoliceBadge(name,role){
+  if(!['owner','moderator'].includes(String(role||'').toLowerCase()))return;
+  const badge=document.createElement('span');
+  badge.textContent=' 👮';
+  badge.className='police-role-badge';
+  badge.title=role==='owner'?'Tulajdonos':'Moderátor';
+  badge.setAttribute('aria-label',badge.title);
+  badge.style.cursor='help';
+  name.append(badge);
+}
 const DEFAULT_AVATAR='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="40" fill="#29292f"/><circle cx="40" cy="29" r="14" fill="#a6a6ad"/><path d="M13 72c2-17 13-25 27-25s25 8 27 25" fill="#a6a6ad"/></svg>');
 function status(message){$('status').textContent=message||''}
 function chatStatus(message){$('chatStatus').textContent=message||''}
 function showRecovery(show){recoveryMode=show;$('normalAuth').classList.toggle('hidden',show);$('recoveryForm').classList.toggle('hidden',!show);$('auth').classList.remove('hidden');$('app').classList.add('hidden');if(show)status('A visszaállító link elfogadva. Állítsd be az új jelszót.')}
 function explainUrlError(){const p=new URLSearchParams(location.hash.slice(1));const code=p.get('error_code');if(code==='otp_expired'||p.get('error')==='access_denied'){status('A jelszó-visszaállító link lejárt vagy már felhasználták. Kérj új e-mailt, és a legfrissebb levél linkjét nyisd meg egyszer.');return true}return false}
+
 $('authform').addEventListener('submit', async e => {
   e.preventDefault();
-  const form = $('authform');
-  const button = form.querySelector('button[type="submit"]');
+
+  const username = $('username').value.trim();
+  const password = $('password').value;
+  const button = $('authform').querySelector('button[type="submit"]');
+
+  if (!username || !password) {
+    status('Írd be a felhasználónevet és a jelszót.');
+    return;
+  }
+
   button.disabled = true;
-  status('Bejelentkezés…');
+  status('Belépés folyamatban…');
+
   try {
-    const email = $('email').value.trim();
-    const password = $('password').value;
-    const result = await Promise.race([
-      db.auth.signInWithPassword({ email, password }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('A Supabase-kapcsolat túl sokáig válaszol. Frissítsd az oldalt, és próbáld újra.')), 15000))
-    ]);
-    if (result.error) {
-      status('Bejelentkezési hiba: ' + result.error.message);
-      return;
-    }
-    if (result.data && result.data.user) {
-      status('Sikeres belépés, betöltés…');
-    } else {
-      status('Nem érkezett vissza felhasználói adat. Próbáld újra.');
-    }
-  } catch (error) {
-    status('Bejelentkezési hiba: ' + (error.message || 'Ismeretlen hiba.'));
+  const { data: profile, error: lookupError } = await db.rpc('get_login_email', { p_username: username.trim() });
+  let loginEmail = typeof profile === 'string' ? profile : (Array.isArray(profile) ? (profile[0]?.email || profile[0]?.get_login_email) : (profile?.email || profile?.get_login_email));
+  // Ha az RPC nem adott vissza e-mailt, keressük meg a profilt név alapján is.
+  if (!loginEmail) {
+    const { data: found, error: profileLookupError } = await db.from('profiles')
+      .select('email').ilike('display_name', username.trim()).limit(1).maybeSingle();
+    if (!profileLookupError && found?.email) loginEmail = found.email;
+  }
+  if (!loginEmail) {
+    status(lookupError ? 'A felhasználónév-kereső SQL-függvény hibája: ' + lookupError.message + '. A mellékelt SQL-t is futtasd le a Supabase SQL Editorban.' : 'Nem található ilyen felhasználónév. Ellenőrizd a regisztrációkor használt nevet.');
+    return;
+  }
+
+   const { error } = await db.auth.signInWithPassword({
+ email: loginEmail,
+  password: password
+});
+  if (error) {
+  status('Sikertelen belépés. Ellenőrizd a jelszót.');
+  return;
+}
+
+    status('Sikeres belépés, betöltés…');
+  } catch (err) {
+    status('Belépési hiba: ' + err.message);
   } finally {
     button.disabled = false;
   }
 });
-$('register').addEventListener('click',async()=>{
-  const username=$('username').value.trim();
-  const email=$('email').value.trim();
-  const password=$('password').value;
 
-  if(username.length<3){
-    status('Adj meg legalább 3 karakteres felhasználónevet.');
+$('register').addEventListener('click', async () => {
+  const username = $('username').value.trim();
+  const email = $('email').value.trim().toLowerCase();
+  const password = $('password').value;
+
+  if (username.length < 3 || username.length > 24) {
+    status('A felhasználónév 3–24 karakter legyen.');
+    $('username').focus();
     return;
   }
-  if(!email||password.length<6){
-    status('Adj meg e-mail-címet és legalább 6 karakteres jelszót.');
+  if (!/^[a-zA-Z0-9_.-]+$/.test(username)) {
+    status('A felhasználónév csak angol betűket, számokat, pontot, kötőjelet és aláhúzást tartalmazhat.');
+    $('username').focus();
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    status('Regisztrációhoz add meg az e-mail-címedet is.');
+    $('email').focus();
+    return;
+  }
+  if (password.length < 6) {
+    status('A jelszó legalább 6 karakter legyen.');
+    $('password').focus();
     return;
   }
 
-  status('Fiók létrehozása…');
-  const {error}=await db.auth.signUp({
-    email,
-    password,
-    options:{
-      data:{username:username,display_name:username},
-      emailRedirectTo:location.origin+location.pathname
+  const button = $('register');
+  button.disabled = true;
+  status('Regisztráció folyamatban…');
+  try {
+    const { data, error } = await db.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'https://roncsika38.github.io/predator.Chat/',
+        data: { username, display_name: username }
+      }
+    });
+    if (error) throw error;
+
+    if (data?.session && data?.user) {
+      const { error: profileError } = await db.from('profiles').upsert({
+        id: data.user.id,
+        email,
+        display_name: username,
+        avatar_url: null
+      }, { onConflict: 'id' });
+      if (profileError) {
+        status('A fiók létrejött, de a profil mentése hibát jelzett: ' + profileError.message + '. Próbálj bejelentkezni; a profil automatikusan is létrejöhet.');
+        return;
+      }
+      status('Sikeres regisztráció! Most jelentkezz be a felhasználóneveddel és a jelszavaddal.');
+    } else {
+      status('A regisztrációs kérelem elkészült. Nyisd meg a ' + email + ' címre érkező megerősítő levelet, majd térj vissza és jelentkezz be. Nézd meg a Spam mappát is.');
     }
-  });
-
-  status(error?'Regisztrációs hiba: '+error.message:
-    'Regisztráció elküldve. Ha megerősítő levelet kapsz, nyisd meg azt.');
+  } catch (err) {
+    const message = err?.message || 'Ismeretlen hiba';
+    if (/already registered|user already exists/i.test(message)) {
+      status('Ez az e-mail-cím már regisztrálva van. Jelentkezz be, vagy használd az Elfelejtett jelszó gombot.');
+    } else if (/signups not allowed|signup is disabled/i.test(message)) {
+      status('A Supabase-ben az Authentication → Sign In / Providers oldalon engedélyezni kell az új felhasználók regisztrációját.');
+    } else {
+      status('Regisztrációs hiba: ' + message);
+    }
+  } finally {
+    button.disabled = false;
+  }
 });
-$('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim();if(!email){status('Először írd be az e-mail-címedet!');return}status('Jelszó-visszaállító e-mail küldése…');const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});status(error?'Hiba: '+error.message:'Ha a cím regisztrálva van, elküldtük a visszaállító e-mailt. A legfrissebb levelet nyisd meg.')});
+
+$('forgotPassword').addEventListener('click', async () => {
+  const email = $('email').value.trim().toLowerCase();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    status('Írd be az e-mail-címedet a fenti e-mail mezőbe, majd kattints újra az Elfelejtett jelszó gombra.');
+    $('email').focus();
+    return;
+  }
+  const button = $('forgotPassword');
+  button.disabled = true;
+  status('Jelszó-visszaállító e-mail küldése…');
+  try {
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://roncsika38.github.io/predator.Chat/'
+    });
+    if (error) throw error;
+    status('Ha ehhez az e-mail-címhez tartozik fiók, elküldtük a jelszó-visszaállító levelet. Nézd meg a Spam mappát is, és a legfrissebb levél linkjét nyisd meg.');
+  } catch (err) {
+    status('Nem sikerült e-mailt küldeni: ' + (err?.message || 'Ismeretlen hiba'));
+  } finally {
+    button.disabled = false;
+  }
+});
 $('newPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const p1=$('newPassword').value,p2=$('newPasswordAgain').value;if(p1.length<6){status('A jelszónak legalább 6 karakteresnek kell lennie.');return}if(p1!==p2){status('A két jelszó nem egyezik.');return}status('Jelszó mentése…');const {error}=await db.auth.updateUser({password:p1});if(error){status('Nem sikerült megváltoztatni a jelszót: '+error.message);return}status('Sikerült megváltoztatni a jelszót.');$('newPasswordForm').reset();showRecovery(false);await db.auth.signOut();history.replaceState(null,'',location.pathname)});
 $('logout').addEventListener('click',async()=>{await db.auth.signOut()});
-document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));['chat','members','private','profile','admin'].forEach(id=>$(id).classList.add('hidden'));$(button.dataset.tab).classList.remove('hidden');if(button.dataset.tab==='members')loadMembers();if(button.dataset.tab==='private')loadPrivateMessages();if(button.dataset.tab==='music')loadMusicList()})});
+document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));['chat','music','radio','games','members','private','profile','vip','admin'].forEach(id=>$(id).classList.add('hidden'));$(button.dataset.tab).classList.remove('hidden');if(button.dataset.tab==='members')loadMembers();if(button.dataset.tab==='private')loadPrivateMessages();if(button.dataset.tab==='vip')loadVipShop()})});
 const OWNER_USER_ID='aef906e3-f704-4a28-b3c2-6a1373c5c4f5';
 async function checkAdmin(){
   const {data,error}=await db.from('chat_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
@@ -458,16 +839,42 @@ async function checkAdmin(){
   if(error){
     $('adminTab').classList.toggle('hidden',!isOwner);
     $('roomAdminTools').classList.toggle('hidden',!isOwner);
-    $('roleAdminTools').classList.toggle('hidden',!isOwner);
+    $('roleAdminTools').classList.toggle('hidden',!isOwner);$('vipAdminTools').classList.toggle('hidden',!isOwner);
+    $('sharedBackground').classList.toggle('hidden',!isOwner);
     $('adminStatus').textContent='Adminellenőrzési hiba: '+error.message+(isOwner?' A tulajdonosi azonosító egyezik.':'');
     return;
   }
   const isAdmin=data?.role==='admin'||isOwner;
+  isPredatorOwner=!!isOwner; isPredatorAdmin=!!isAdmin;
   $('adminTab').classList.toggle('hidden',!isAdmin);
   $('roomAdminTools').classList.toggle('hidden',!isAdmin);
-  $('roleAdminTools').classList.toggle('hidden',!isOwner);
+  $('roleAdminTools').classList.toggle('hidden',!isOwner);$('vipAdminTools').classList.toggle('hidden',!isOwner);
+  $('sharedBackground').classList.toggle('hidden',!isOwner);
   $('adminStatus').textContent=isAdmin?(isOwner?'Tulajdonosi fiókkal vagy belépve.':'Adminisztrátori fiókkal vagy belépve.'):'Ehhez a fiókhoz nincs adminjog. A tulajdonosi azonosítót és a chat_roles táblát ellenőrizni kell.';
 }
+async function setVipForUsername(active){
+  const username=$('vipTargetUsername').value.trim();
+  const out=$('vipAdminStatus');
+  if(!currentUser || String(currentUser.id)!==OWNER_USER_ID){out.textContent='Ehhez csak a tulajdonosi fiók jogosult.';return;}
+  if(username.length<3){out.textContent='Írd be a tag legalább 3 karakteres megjelenő nevét.';return;}
+  const buttons=$('vipAdminForm').querySelectorAll('button');
+  buttons.forEach(b=>b.disabled=true);
+  out.textContent=active?'VIP-jogosultság adása…':'VIP-jogosultság visszavonása…';
+  try{
+    const {data,error}=await db.rpc('predator_admin_set_vip_by_username',{p_username:username,p_active:active});
+    if(error)throw error;
+    out.textContent=active?'Sikeresen ingyen VIP-et adtál ennek a tagnak: '+username+'.':'A VIP-jogosultságot visszavontad ennél a tagnál: '+username+'.';
+    $('vipTargetUsername').value='';
+    await loadVipMemberships();
+    if(currentRoom) await loadMessages();
+    await renderOnlineMembers();
+  }catch(err){
+    out.textContent='Nem sikerült: '+(err?.message||'Ismeretlen hiba')+'. Ellenőrizd, hogy a VIP-admin SQL lefutott-e.';
+  }finally{buttons.forEach(b=>b.disabled=false);}
+}
+$('vipAdminForm').addEventListener('submit',async e=>{e.preventDefault();await setVipForUsername(true);});
+$('removeVipButton').addEventListener('click',async()=>{await setVipForUsername(false);});
+
 $('createRoomForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!currentUser){$('roomAdminStatus').textContent='Előbb jelentkezz be.';return}
   const name=$('newRoomName').value.trim();if(!name){$('roomAdminStatus').textContent='Írd be a szoba nevét.';return}
@@ -478,12 +885,18 @@ $('createRoomForm').addEventListener('submit',async e=>{
 });
 $('roleForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!currentUser||String(currentUser.id)!==OWNER_USER_ID){$('roleStatus').textContent='Ehhez csak a tulajdonosi fiók jogosult.';return}
-  const userId=$('targetUserId').value.trim(),role=$('targetRole').value;
-  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)){$('roleStatus').textContent='Érvényes felhasználói UUID-t adj meg.';return}
-  const button=$('roleForm').querySelector('button');button.disabled=true;$('roleStatus').textContent='Szerepkör mentése…';
-  const {error}=await db.rpc('grant_predator_role',{p_user_id:userId,p_role:role});button.disabled=false;
-  if(error){$('roleStatus').textContent='Nem sikerült menteni: '+error.message;return}
-  $('roleStatus').textContent='Szerepkör elmentve.';
+  const username=$('targetUsername').value.trim(),role=$('targetRole').value;
+  if(username.length<2){$('roleStatus').textContent='Adj meg egy érvényes felhasználónevet.';return}
+  const button=$('roleForm').querySelector('button');button.disabled=true;$('roleStatus').textContent='Felhasználó keresése és szerepkör mentése…';
+  try {
+    const {error}=await db.rpc('predator_set_role_by_username',{p_username:username,p_role:role});
+    if(error) throw error;
+    predatorRoleCache.clear(); profileCache.clear(); await loadProfileCache(); await loadMembers(); if(currentRoom) await loadMessages();
+    $('roleStatus').textContent='Szerepkör elmentve: '+username+' → '+({member:'Tag',moderator:'Moderátor',admin:'Admin'}[role]||role)+'.';
+    $('roleForm').reset();
+  } catch(err) {
+    $('roleStatus').textContent='Nem sikerült menteni: '+(err?.message||'Ismeretlen hiba')+'. A felhasználónév-alapú jogosultság SQL-függvényének elérhetőnek kell lennie a Supabase-ben.';
+  } finally {button.disabled=false}
 });
 async function loadRooms(){
   const {data,error}=await db.from('rooms').select('*');
@@ -494,20 +907,18 @@ async function loadRooms(){
 }
 function selectRoom(room){currentRoom=room;const name=room.name||room.title||room.slug||'Szoba';$('roomTitle').textContent=name;document.querySelectorAll('#rooms button').forEach(b=>b.classList.toggle('active',b.textContent==='💬 '+name));if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}loadMessages();messageChannel=db.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},payload=>renderMessage(payload.new)).subscribe()}
 async function loadProfileCache(){if(!currentUser)return;const {data,error}=await db.from('profiles').select('id,display_name,avatar_url').limit(500);if(error){console.warn('Profilképek betöltése:',error.message);return}(data||[]).forEach(p=>profileCache.set(String(p.id),p));const mine=profileCache.get(String(currentUser.id));if(mine?.avatar_url)$('avatarPreview').src=mine.avatar_url;else $('avatarPreview').src=DEFAULT_AVATAR}
+async function loadVipMemberships(){vipUserIds.clear();if(!currentUser)return;const {data,error}=await db.from('vip_memberships').select('user_id').eq('active',true).limit(1000);if(error){console.warn('VIP-jelvények nem tölthetők be:',error.message);return}(data||[]).forEach(row=>vipUserIds.add(String(row.user_id)));}
 async function renderMessage(m){if(!m||String(m.room_id)!==String(currentRoom?.id))return;if($('messages').querySelector('[data-id="'+CSS.escape(String(m.id))+'"]'))return;const profile=profileCache.get(String(m.sender_id))||{};const item=document.createElement('div');item.className='msg';item.dataset.id=String(m.id);const avatar=document.createElement('img');avatar.className='msg-avatar';avatar.alt='Profilkép';avatar.src=profile.avatar_url||DEFAULT_AVATAR;const content=document.createElement('div');content.className='msg-content';const head=document.createElement('div');head.className='msg-head';const name=document.createElement('b');
 name.textContent = profile.display_name ||
   (String(m.sender_id) === String(currentUser?.id) ? 'Te' : 'Tag');
-
-if (String(m.sender_id) === OWNER_USER_ID) {
-  const police = document.createElement('span');
-  police.textContent = ' 👮';
-  police.title = 'Tulajdonos';
-  police.setAttribute('aria-label', 'Tulajdonos');
-  name.append(police);
-}
+const senderRole=String(m.sender_id)===OWNER_USER_ID?'owner':await getPredatorRole(m.sender_id);
+appendPoliceBadge(name,senderRole);
+if(vipUserIds.has(String(m.sender_id))){const vipBadge=document.createElement('span');vipBadge.textContent=' 👑 VIP';vipBadge.className='vip-badge';vipBadge.title='VIP-tag';vipBadge.style.cssText='color:#ffd45a;font-weight:800;font-size:12px;margin-left:4px';name.append(vipBadge);}
                               const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';const body=document.createElement('div');body.className='message-body';const match=String(m.body||'').match(/^\[\[PREDATOR_IMAGE:(.+?)\]\](?: (.*))?$/);if(match){const {data,error}=await db.storage.from('chat-images').createSignedUrl(match[1].trim().replace(/^\/+/,'').replace(/^chat-images\//,''),3600);if(error){body.textContent='A kép nem tölthető be: '+error.message}else{if(match[2])body.append(document.createTextNode(match[2]));const img=document.createElement('img');img.className='chat-image';img.alt='Elküldött kép';img.src=data.signedUrl;img.loading='lazy';body.append(img)}}else{body.textContent=m.body||''}head.append(name,time);content.append(head,body);item.append(avatar,content);$('messages').append(item);$('messages').scrollTop=$('messages').scrollHeight}
 async function loadMessages(){$('messages').replaceChildren();if(!currentRoom)return;const {data,error}=await db.from('messages').select('id,sender_id,room_id,body,created_at').eq('room_id',currentRoom.id).is('recipient_id',null).order('created_at',{ascending:true}).limit(100);if(error){chatStatus('Nem tölthetők be az üzenetek: '+error.message);return}const ids=[...new Set((data||[]).map(m=>String(m.sender_id)))].filter(id=>!profileCache.has(id));if(ids.length){const {data:profiles}=await db.from('profiles').select('id,display_name,avatar_url').in('id',ids);(profiles||[]).forEach(p=>profileCache.set(String(p.id),p))}(data||[]).forEach(renderMessage);chatStatus('')}
 $('chooseChatImage').addEventListener('click',()=>$('chatImageFile').click());
+// Kép kiválasztásakor automatikusan küldjük el; nem kell hozzá szöveget írni vagy külön a Küldés gombra nyomni.
+$('chatImageFile').addEventListener('change',()=>{if($('chatImageFile').files&&$('chatImageFile').files.length){$('sendForm').requestSubmit();}});
 $('sendForm').addEventListener('submit',async e=>{
  e.preventDefault();if(!currentUser||!currentRoom){chatStatus('Előbb jelentkezz be és válassz szobát.');return}
  const textBody=$('message').value.trim(),file=$('chatImageFile').files[0];if(!textBody&&!file)return;
@@ -522,233 +933,154 @@ body='[[PREDATOR_IMAGE:'+(uploaded?.path||path)+']]'+(textBody?' '+textBody:'')}
  $('message').value='';$('chatImageFile').value='';chatStatus('')
  }catch(err){chatStatus('Hiba: '+(err.message||'Ismeretlen hiba'))}finally{btn.disabled=false}
 });
+$('saveProfileDetails').addEventListener('click',async()=>{
+  if(!currentUser){$('profileDetailsStatus').textContent='Előbb jelentkezz be.';return}
+  const rawAge=$('profileAge').value.trim();
+  const age=rawAge===''?null:Number(rawAge);
+  const city=$('profileCity').value.trim();
+  const gender=$('profileGender').value;
+  if(age!==null&&(!Number.isInteger(age)||age<13||age>99)){
+    $('profileDetailsStatus').textContent='Az életkor 13 és 99 közötti egész szám legyen.';return
+  }
+  if(city.length>80){$('profileDetailsStatus').textContent='A település legfeljebb 80 karakter lehet.';return}
+  $('saveProfileDetails').disabled=true;
+  $('profileDetailsStatus').textContent='Adatlap mentése…';
+  const {error}=await db.from('profile_details').upsert({
+    user_id:currentUser.id,age,city:city||null,gender:gender||null
+  },{onConflict:'user_id'});
+  $('saveProfileDetails').disabled=false;
+  if(error){$('profileDetailsStatus').textContent='Mentési hiba: '+error.message+' — futtasd le az adatlap SQL-beállítását a Supabase-ben.';return}
+  $('profileDetailsStatus').textContent='Az adatlapod elmentve.';
+});
 $('saveDisplayName').addEventListener('click',async()=>{if(!currentUser){$('displayNameStatus').textContent='Előbb jelentkezz be.';return}const display_name=$('displayName').value.trim();if(display_name.length<2||display_name.length>32){$('displayNameStatus').textContent='A név 2–32 karakter legyen.';return}const old=profileCache.get(String(currentUser.id))||{};const {error}=await db.from('profiles').upsert({id:currentUser.id,email:currentUser.email,display_name,avatar_url:old.avatar_url||null},{onConflict:'id'});if(error){$('displayNameStatus').textContent='Névmentési hiba: '+error.message;return}profileCache.set(String(currentUser.id),{...old,id:currentUser.id,display_name,email:currentUser.email});$('userbar').textContent=display_name;$('displayNameStatus').textContent='A neved elmentve.';await loadMembers();if(currentRoom)await loadMessages()});
-async function loadSharedBackground(){
-  const {data,error}=await db
-    .from('chat_background')
-    .select('background_type,background_value')
-    .eq('id',1)
-    .maybeSingle();
-
-  if(error){
-    $('backgroundStatus').textContent='Betöltési hiba: '+error.message;
-    return;
-  }
-
-  if(data) applySharedBackground(
-    data.background_type,
-    data.background_value
-  );
-}
-
-function applySharedBackground(type,value){
-  document.body.style.backgroundImage='';
-  document.body.style.backgroundColor='#101012';
-
-  if(type==='image' && value){
-    document.body.style.backgroundImage=
-      'linear-gradient(#09090c88,#09090c99),url("'+value+'")';
-    document.body.style.backgroundSize='cover';
-    document.body.style.backgroundPosition='center';
-    document.body.style.backgroundAttachment='fixed';
-  }else{
-    document.body.style.backgroundColor=value||'#101012';
-  }
-}
-
-async function saveSharedBackground(type,value){
-  if(!currentUser){
-    $('backgroundStatus').textContent='Előbb jelentkezz be!';
-    return;
-  }
-
-  $('backgroundStatus').textContent='Mentés...';
-
-  const {error}=await db.from('chat_background').upsert({
-    id:1,
-    background_type:type,
-    background_value:value,
-    updated_at:new Date().toISOString()
-  },{onConflict:'id'});
-
-  if(error){
-    $('backgroundStatus').textContent='Hiba: '+error.message;
-    return;
-  }
-
-  applySharedBackground(type,value);
-  $('backgroundStatus').textContent=
-    'A közös háttér elmentve!';
-}
-
-$('uploadBackground').addEventListener('click',async()=>{
-  const file=$('backgroundFile').files[0];
-
-  if(!file){
-    $('backgroundStatus').textContent='Válassz ki egy képet!';
-    return;
-  }
-
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){
-    $('backgroundStatus').textContent='JPG, PNG vagy WEBP képet válassz!';
-    return;
-  }
-
-  if(file.size>5*1024*1024){
-    $('backgroundStatus').textContent='A kép legfeljebb 5 MB lehet!';
-    return;
-  }
-
-  if(!currentUser){
-    $('backgroundStatus').textContent='Előbb jelentkezz be!';
-    return;
-  }
-
-  $('backgroundStatus').textContent='Kép feltöltése...';
-
-  const ext={
-    'image/jpeg':'jpg',
-    'image/png':'png',
-    'image/webp':'webp'
-  }[file.type];
-
-  const path=currentUser.id+'/'+Date.now()+'.'+ext;
-
-  const {data,error}=await db.storage
-    .from('chat-backgrounds')
-    .upload(path,file,{upsert:false,contentType:file.type});
-
-  if(error){
-    $('backgroundStatus').textContent='Feltöltési hiba: '+error.message;
-    return;
-  }
-
-  const {data:urlData}=db.storage
-    .from('chat-backgrounds')
-    .getPublicUrl(data.path);
-
-  await saveSharedBackground('image',urlData.publicUrl);
-});
-
-$('clearBackground').addEventListener('click',()=>{
-  saveSharedBackground('color','#101012');
-});
-
-loadSharedBackground();
 function setMemberStatus(message){$('membersStatus').textContent=message||''}
 function setPrivateStatus(message){$('privateStatus').textContent=message||''}
-async function loadMembers(){function renderOnlineMembers(){
+
+async function renderOnlineMembers(){
   const sideList=$('onlineMemberList');
   if(!sideList)return;
   sideList.replaceChildren();
-
   const ids=new Set(onlineUserIds);
   if(currentUser)ids.add(String(currentUser.id));
-
+  const shownNames=new Set();
   let count=0;
   for(const id of ids){
     const p=profileCache.get(String(id));
     if(!p)continue;
-
+    const displayName=String(p.display_name||'Tag').trim();
+    const nameKey=displayName.toLocaleLowerCase('hu-HU');
+    if(shownNames.has(nameKey))continue;
+    shownNames.add(nameKey);
     const row=document.createElement('div');
     row.className='member-item';
-
     const img=document.createElement('img');
     img.alt='Profilkép';
     img.src=p.avatar_url||DEFAULT_AVATAR;
-
     const name=document.createElement('div');
     name.className='member-name';
-   name.textContent =
-  (p.display_name && p.display_name !== 'Tag'
-    ? p.display_name
-    : (p.email ? p.email.split('@')[0] : 'Tag'));
-
+    name.textContent=displayName;
+    if(vipUserIds.has(String(id))){const vipBadge=document.createElement('span');vipBadge.textContent=' 👑 VIP';vipBadge.title='VIP-tag';vipBadge.style.cssText='color:#ffd45a;font-weight:800;font-size:12px';name.append(vipBadge);}
+    const role=String(id)===OWNER_USER_ID?'owner':await getPredatorRole(id);
+    appendPoliceBadge(name,role);
+    name.classList.add('clickable-name'); name.title='Kattints a tagra'; name.addEventListener('click',()=>openMemberActions(p));
+    row.style.cursor='pointer'; row.addEventListener('click',()=>openMemberActions(p));
     row.append(img,name);
     sideList.append(row);
     count++;
   }
-
   $('onlineMembersStatus').textContent=count+' online tag';
 }
 
 function startOnlinePresence(){
   if(!currentUser)return;
-
   if(onlinePresenceChannel){
     db.removeChannel(onlinePresenceChannel);
     onlinePresenceChannel=null;
   }
-
   const channel=db.channel('predator-online-users',{
     config:{presence:{key:String(currentUser.id)}}
   });
-
   onlinePresenceChannel=channel;
-
   channel.on('presence',{event:'sync'},()=>{
     onlineUserIds.clear();
     const state=channel.presenceState();
-
     for(const [key,entries] of Object.entries(state)){
       for(const entry of entries){
         onlineUserIds.add(String(entry.user_id||key));
       }
     }
-
     renderOnlineMembers();
   });
-
   channel.subscribe(async status=>{
     if(status==='SUBSCRIBED'){
-      await channel.track({
-        user_id:String(currentUser.id),
-        online_at:new Date().toISOString()
-      });
+      await channel.track({user_id:String(currentUser.id),online_at:new Date().toISOString()});
     }
   });
 }
+
+async function loadMembers(){
   if(!currentUser)return;
   setMemberStatus('Tagok betöltése…');
-  const {data,error}=await db.from('profiles').select('id,display_name,email,avatar_url,role').order('display_name',{ascending:true}).limit(500);
-  if(error){setMemberStatus('Nem tölthető be a taglista: '+error.message+' — a profiles táblához SELECT jogosultság szükséges.');return}
-  const list=$('memberList');list.replaceChildren();
-  const recipients=$('privateRecipient');const previous=recipients.value;recipients.replaceChildren();
-  const first=document.createElement('option');first.value='';first.textContent='Válassz tagot…';recipients.append(first);
+  const {data,error}=await db.from('profiles')
+    .select('id,display_name,email,avatar_url,role')
+    .order('display_name',{ascending:true}).limit(500);
+  if(error){
+    setMemberStatus('Nem tölthető be a taglista: '+error.message+' — a profiles táblához SELECT jogosultság szükséges.');
+    return;
+  }
+  const list=$('memberList');
+  list.replaceChildren();
+  const directList = $('directMessageList');
+  if (directList) directList.replaceChildren();
+  const recipients=$('privateRecipient');
+  const previous=recipients.value;
+  recipients.replaceChildren();
+  const first=document.createElement('option');
+  first.value='';
+  first.textContent='Válassz tagot…';
+  recipients.append(first);
   const others=data||[];
-  for(const p of data||[]){
+  for(const p of others){
     profileCache.set(String(p.id),p);
     if(String(p.id)!==String(currentUser.id)){
-      const opt=document.createElement('option');opt.value=String(p.id);opt.textContent=p.display_name||p.email||('Tag '+String(p.id).slice(0,8));recipients.append(opt);
+      const opt=document.createElement('option');
+      opt.value=String(p.id);
+      opt.textContent=p.display_name||'Tag';
+      recipients.append(opt);
     }
   }
-  const sideList=$('onlineMemberList');
-sideList.replaceChildren();
-
-for(const p of data||[]){
-  const row=document.createElement('div');
-  row.className='member-item';
-
-  const name=document.createElement('div');
-  name.className='member-name';
-
-const label = p.display_name || p.email?.split('@')[0] || 'Tag';
-name.textContent = label;
-
-  row.append(name);
-  sideList.append(row);
-}
-
-$('onlineMembersStatus').textContent=(data||[]).length+' tag betöltve.';
-  if(!others.length){setMemberStatus('Másik tag nem látható. Ellenőrizni kell, hogy a profiles SELECT szabály engedi-e a tagok olvasását.');return}
-  setMemberStatus(others.length+' tag betöltve.');
+  if(previous)recipients.value=previous;
   for(const p of others){
-    const row=document.createElement('div');row.className='member-item';
-    const img=document.createElement('img');img.alt='Profilkép';img.src=p.avatar_url||DEFAULT_AVATAR;
-    const name=document.createElement('div');name.className='member-name';name.textContent=p.display_name||p.email||('Tag '+String(p.id).slice(0,8));
-    const btn=document.createElement('button');btn.type='button';btn.textContent='Privát üzenet';btn.addEventListener('click',()=>{document.querySelector('[data-tab="private"]').click();$('privateRecipient').value=String(p.id);privateRecipientId=String(p.id);loadPrivateMessages()});
-    row.append(img,name,btn);list.append(row);
+    if (directList && String(p.id) !== String(currentUser.id)) {
+      const shortcut = document.createElement('button');
+      shortcut.type = 'button';
+      shortcut.className = 'direct-shortcut';
+      shortcut.textContent = '● ' + (p.display_name || 'Tag');
+      shortcut.addEventListener('click', () => openPrivatePopup(p));
+      directList.append(shortcut);
+    }
+    const row=document.createElement('div');
+    row.className='member-item';
+    const img=document.createElement('img');
+    img.alt='Profilkép';
+    img.src=p.avatar_url||DEFAULT_AVATAR;
+    const name=document.createElement('div');
+    name.className='member-name clickable-name';
+    name.textContent=p.display_name||'Tag';
+    name.title='Kattints a profilra és a privát üzenethez';
+    name.addEventListener('click',()=>openMemberActions(p));
+    row.append(img,name);
+    if(String(p.id)!==String(currentUser.id)){
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.textContent='Privát üzenet';
+      btn.addEventListener('click', () => openPrivatePopup(p));
+      row.append(btn);
+    }
+    list.append(row);
   }
+  renderOnlineMembers();
+  setMemberStatus(others.length+' tag betöltve.');
 }
 async function loadPrivateMessages(){
   if(!currentUser)return;
@@ -765,7 +1097,7 @@ async function loadPrivateMessages(){
     const row=document.createElement('div');row.className='msg';
     const content=document.createElement('div');content.className='msg-content';
     const head=document.createElement('div');head.className='msg-head';
-    const name=document.createElement('b');const profile=profileCache.get(String(m.sender_id));name.textContent=String(m.sender_id)===String(currentUser.id)?'Te':(profile?.display_name||profile?.email||'Tag');
+    const name=document.createElement('b');const profile=profileCache.get(String(m.sender_id));name.textContent=String(m.sender_id)===String(currentUser.id)?(profile?.display_name||'Te'):(profile?.display_name||'Tag');const senderRole=String(m.sender_id)===OWNER_USER_ID?'owner':await getPredatorRole(m.sender_id);appendPoliceBadge(name,senderRole);
     const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';
     const body=document.createElement('div');body.className='message-body';body.textContent=m.body||'';
     head.append(name,time);content.append(head,body);row.append(content);box.append(row);
@@ -930,20 +1262,102 @@ $('musicUploadForm').addEventListener('submit', async e => {
 onlineUserIds.clear();
 $('onlineMemberList').replaceChildren();
 $('onlineMembersStatus').textContent='Nincs online tag';
-  currentUser=session?.user||null;const loggedIn=!!currentUser;
-  $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?currentUser.email:'Nincs bejelentkezve';
-  if(!loggedIn){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}currentRoom=null;$('messages').replaceChildren();$('adminTab').classList.add('hidden');$('roomAdminTools').classList.add('hidden');$('roleAdminTools').classList.add('hidden');return}
-  $('profileEmail').textContent=currentUser.email||'';$('displayName').value=profileCache.get(String(currentUser.id))?.display_name||currentUser.email?.split('@')[0]||'';
+  currentUser=session?.user||null;window.currentUser=currentUser;const loggedIn=!!currentUser;
+  if(moderationPollTimer){clearInterval(moderationPollTimer);moderationPollTimer=null;}
+  moderationExitInProgress=false;
+  if(loggedIn){
+    const {data:moderation,error:moderationError}=await db.from('predator_moderation').select('action,banned_until,reason,moderator_name,updated_at').eq('user_id',currentUser.id).maybeSingle();
+    if(moderationError){
+      console.warn('Moderálási állapot ellenőrzése sikertelen:',moderationError.message);
+    } else if(moderation && moderation.banned_until && (moderation.banned_until==='infinity' || new Date(moderation.banned_until)>new Date())){
+      const actionText=moderation.action==='kick'?'kidobtak a chatből':moderation.banned_until==='infinity'?'véglegesen kitiltottak':'ideiglenesen kitiltottak';
+      const moderatorText=' Kitiltotta: '+(moderation.moderator_name||'adminisztrátor / moderátor')+'.';
+      const durationText=moderation.banned_until==='infinity'?' Időtartam: végleges tiltás.':moderation.action==='kick'?' Időtartam: kidobás (1 percig nem lehet visszalépni).':' Időtartam: '+Math.max(1,Math.ceil((new Date(moderation.banned_until)-new Date(moderation.updated_at||Date.now()))/60000))+' perc.';
+      const untilText=moderation.banned_until==='infinity'?' A tiltás végleges.':' Lejárat: '+new Date(moderation.banned_until).toLocaleString('hu-HU')+'.';
+      const reasonText=moderation.reason?' Indok: '+moderation.reason+'.':'';
+      await db.auth.signOut(); currentUser=null; $('auth').classList.remove('hidden'); $('app').classList.add('hidden');
+      status('A Predator Chatből '+actionText+'.'+moderatorText+durationText+untilText+reasonText+' Ha szerinted tévedés történt, keresd meg az adminisztrátort.');
+      return;
+    }
+  }
+  $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?(profileCache.get(String(currentUser.id))?.display_name||currentUser.user_metadata?.username||currentUser.user_metadata?.display_name||'Bejelentkezve'):'Nincs bejelentkezve';
+  if(!loggedIn){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}currentRoom=null;$('messages').replaceChildren();$('adminTab').classList.add('hidden');$('roomAdminTools').classList.add('hidden');$('roleAdminTools').classList.add('hidden');$('vipAdminTools').classList.add('hidden');return}
+  $('profileEmail').textContent='';$('displayName').value=profileCache.get(String(currentUser.id))?.display_name||currentUser.email?.split('@')[0]||'';
+  const {data:myDetails,error:detailsError}=await db.from('profile_details')
+    .select('age,city,gender').eq('user_id',currentUser.id).maybeSingle();
+  if(detailsError){
+    $('profileDetailsStatus').textContent='Az adatlap SQL-beállítása még szükséges: '+detailsError.message;
+  }else{
+    $('profileAge').value=myDetails?.age??'';
+    $('profileCity').value=myDetails?.city||'';
+    $('profileGender').value=myDetails?.gender||'';
+  }
   await loadProfileCache();
   const oldProfile=profileCache.get(String(currentUser.id))||{};
   const {error:ownProfileError}=await db.from('profiles').upsert({id:currentUser.id,email:currentUser.email,display_name:currentUser.user_metadata?.username||currentUser.user_metadata?.display_name||oldProfile.display_name||currentUser.email?.split('@')[0]||'Tag',avatar_url:oldProfile.avatar_url||null},{onConflict:'id'});
   if(ownProfileError)console.warn('Saját profil létrehozása nem sikerült:',ownProfileError.message);
   await loadProfileCache();
+  await loadVipMemberships();
+  // A szerver-adatbázisban rögzített kidobást/tiltást az aktív munkamenet is rendszeresen ellenőrzi.
+  moderationPollTimer=setInterval(async()=>{
+    if(!currentUser||moderationExitInProgress)return;
+    const checkedUserId=currentUser.id;
+    const {data:mod,error:modError}=await db.from('predator_moderation').select('action,banned_until,reason,moderator_name,updated_at').eq('user_id',checkedUserId).maybeSingle();
+    if(modError||!mod||!mod.banned_until)return;
+    const active=mod.banned_until==='infinity'||new Date(mod.banned_until)>new Date();
+    if(!active||String(currentUser?.id)!==String(checkedUserId))return;
+    moderationExitInProgress=true;
+    const actionText=mod.action==='kick'?'kidobtak a chatből':mod.banned_until==='infinity'?'véglegesen kitiltottak':'ideiglenesen kitiltottak';
+    const moderatorText=' Kitiltotta: '+(mod.moderator_name||'adminisztrátor / moderátor')+'.';
+    const durationText=mod.banned_until==='infinity'?' Időtartam: végleges tiltás.':mod.action==='kick'?' Időtartam: kidobás (1 percig nem lehet visszalépni).':' Időtartam: '+Math.max(1,Math.ceil((new Date(mod.banned_until)-new Date(mod.updated_at||Date.now()))/60000))+' perc.';
+    const untilText=mod.banned_until==='infinity'?' A tiltás végleges.':' Lejárat: '+new Date(mod.banned_until).toLocaleString('hu-HU')+'.';
+    const reasonText=mod.reason?' Indok: '+mod.reason+'.':'';
+    if(messageChannel){db.removeChannel(messageChannel);messageChannel=null;}
+    if(onlinePresenceChannel){db.removeChannel(onlinePresenceChannel);onlinePresenceChannel=null;}
+    await db.auth.signOut();
+    currentUser=null;
+    $('auth').classList.remove('hidden');$('app').classList.add('hidden');$('logout').classList.add('hidden');$('userbar').textContent='Nincs bejelentkezve';
+    status('A Predator Chatből '+actionText+'. '+untilText+reasonText+' A rendszer kijelentkeztetett. Ha szerinted tévedés történt, keresd meg az adminisztrátort.');
+  },4000);
 await checkAdmin();
 await loadRooms();
 await loadMembers();
 startOnlinePresence();
 }
+
+async function loadVipShop(){
+  const balance=$('vipCoinBalance'),itemsBox=$('vipShopItems'),shopStatus=$('vipShopStatus');
+  if(!currentUser){balance.textContent='Bejelentkezés szükséges';itemsBox.replaceChildren();return}
+  balance.textContent='Betöltés…';shopStatus.textContent='';itemsBox.replaceChildren();
+  const [{data:wallet,error:walletError},{data:items,error:itemsError},{data:purchases,error:purchasesError}]=await Promise.all([
+    db.from('vip_wallets').select('coins').eq('user_id',currentUser.id).maybeSingle(),
+    db.from('vip_items').select('id,name,price_coins').eq('active',true).order('price_coins'),
+    db.from('vip_purchases').select('item_id').eq('user_id',currentUser.id)
+  ]);
+  if(walletError){balance.textContent='Nem elérhető';shopStatus.textContent='Pénztárca-hiba: '+walletError.message;return}
+  balance.textContent=String(wallet?.coins ?? 0)+' érme';
+  if(itemsError){shopStatus.textContent='A termékek nem tölthetők be: '+itemsError.message;return}
+  if(purchasesError){shopStatus.textContent='A vásárlások nem tölthetők be: '+purchasesError.message;return}
+  const owned=new Set((purchases||[]).map(p=>p.item_id));
+  if(!items?.length){shopStatus.textContent='Jelenleg nincs elérhető VIP-termék.';return}
+  items.forEach(item=>{
+    const card=document.createElement('div');card.className='panel';card.style.margin='8px 0';
+    const title=document.createElement('h3');title.textContent=item.name;
+    const price=document.createElement('p');price.textContent='Ár: '+item.price_coins+' érme';
+    const button=document.createElement('button');button.type='button';
+    button.textContent=owned.has(item.id)?'Már megvásároltad':'Megvásárlás';
+    button.disabled=owned.has(item.id);
+    button.addEventListener('click',async()=>{
+      button.disabled=true;shopStatus.textContent='Vásárlás feldolgozása…';
+      const {data,error}=await db.rpc('buy_vip_item',{p_item_id:item.id});
+      if(error){shopStatus.textContent='Nem sikerült a vásárlás: '+error.message;button.disabled=false;return}
+      shopStatus.textContent='Sikeres vásárlás!';
+      await loadVipShop();
+    });
+    card.append(title,price,button);itemsBox.append(card);
+  });
+}
+
 db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){showRecovery(true);return}if(event==='SIGNED_OUT')recoveryMode=false;setTimeout(()=>showSession(session),0)});
 (async()=>{if(!explainUrlError()){const {data,error}=await db.auth.getSession();if(error)status('Munkamenet-hiba: '+error.message);if(data?.session)await showSession(data.session)}})();
 
@@ -969,8 +1383,8 @@ db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){show
   }
 
   async function saveBackground(type, value) {
-    if (!currentUser) {
-      status.textContent = 'Előbb jelentkezz be!';
+    if (!window.currentUser || String(window.currentUser.id) !== 'aef906e3-f704-4a28-b3c2-6a1373c5c4f5') {
+      status.textContent = 'A közös hátteret kizárólag a Predator Chat tulajdonosa állíthatja.';
       return;
     }
 
@@ -1006,6 +1420,10 @@ db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){show
   });
 
   document.getElementById('sharedBgUpload').addEventListener('click', async () => {
+    if (!window.currentUser || String(window.currentUser.id) !== 'aef906e3-f704-4a28-b3c2-6a1373c5c4f5') {
+      status.textContent = 'A háttérképet kizárólag a tulajdonos állíthatja be.';
+      return;
+    }
     const file = fileInput.files[0];
 
     if (!file) {
@@ -1032,10 +1450,10 @@ db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){show
 
     const { data, error } = await db.storage
       .from('chat-backgrounds')
-      .upload(path, file, { contentType: file.type });
+      .upload(path, file, { upsert: false, contentType: file.type });
 
     if (error) {
-      status.textContent = 'Feltöltési hiba: ' + error.message;
+      status.textContent = 'Feltöltési hiba: ' + error.message + ' (Ellenőrizd, hogy a chat-backgrounds tárhely és a feltöltési szabály létezik-e.)';
       return;
     }
 
@@ -1065,6 +1483,317 @@ db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){show
       colorInput.value = data.background_value;
     }
   }
+})();
+
+// Felugró privát üzenetablak – a beszélgetés az oldalon belül, frissítés nélkül működik.
+let privatePopupChannel = null;
+let privatePopupTarget = null;
+let privatePopupBusy = false;
+
+function ensurePrivatePopup() {
+  if ($('privatePopupBackdrop')) return;
+  const backdrop = document.createElement('div');
+  backdrop.id = 'privatePopupBackdrop';
+  backdrop.innerHTML = `
+    <section id="privatePopup" role="dialog" aria-modal="true" aria-labelledby="privatePopupTitle">
+      <header id="privatePopupHeader">
+        <div id="privatePopupTitle">Privát üzenet</div>
+        <button id="privatePopupClose" type="button" aria-label="Ablak bezárása">✕</button>
+      </header>
+      <div id="privatePopupStatus" role="status">Beszélgetés betöltése…</div>
+      <div id="privatePopupMessages" aria-live="polite"></div>
+      <form id="privatePopupForm">
+        <input id="privatePopupInput" maxlength="2000" placeholder="Írj privát üzenetet…" autocomplete="off" required>
+        <button id="privatePopupSend" type="submit">Küldés</button>
+      </form>
+    </section>`;
+  document.body.append(backdrop);
+  $('privatePopupClose').addEventListener('click', closePrivatePopup);
+  backdrop.addEventListener('click', event => {
+    if (event.target === backdrop) closePrivatePopup();
+  });
+  $('privatePopupForm').addEventListener('submit', sendPopupPrivateMessage);
+}
+
+async function openPrivatePopup(profile) {
+  if (!currentUser) return;
+  if (!profile || !profile.id) return;
+  ensurePrivatePopup();
+  privatePopupTarget = profile;
+  privateRecipientId = String(profile.id);
+  $('privatePopupTitle').textContent =
+    '✉ Privát üzenet – ' + (profile.display_name || 'Tag');
+  $('privatePopupBackdrop').style.display = 'flex';
+  $('privatePopupStatus').textContent = 'Beszélgetés betöltése…';
+  $('privatePopupInput').focus();
+  if (privatePopupChannel) {
+    db.removeChannel(privatePopupChannel);
+    privatePopupChannel = null;
+  }
+  await loadPrivatePopupMessages();
+  privatePopupChannel = db.channel('private-popup-' + currentUser.id + '-' + profile.id)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages'
+    }, payload => {
+      const m = payload.new;
+      const relevant = (String(m.sender_id) === String(currentUser.id) &&
+                        String(m.recipient_id) === String(privatePopupTarget?.id)) ||
+                       (String(m.sender_id) === String(privatePopupTarget?.id) &&
+                        String(m.recipient_id) === String(currentUser.id));
+      if (relevant) loadPrivatePopupMessages();
+    })
+    .subscribe();
+}
+
+function closePrivatePopup() {
+  if ($('privatePopupBackdrop')) $('privatePopupBackdrop').style.display = 'none';
+  if (privatePopupChannel) {
+    db.removeChannel(privatePopupChannel);
+    privatePopupChannel = null;
+  }
+  privatePopupTarget = null;
+}
+
+async function loadPrivatePopupMessages() {
+  if (!currentUser || !privatePopupTarget || privatePopupBusy) return;
+  privatePopupBusy = true;
+  const box = $('privatePopupMessages');
+  try {
+    const otherId = String(privatePopupTarget.id);
+    const filter = 'and(sender_id.eq.' + currentUser.id + ',recipient_id.eq.' + otherId +
+      '),and(sender_id.eq.' + otherId + ',recipient_id.eq.' + currentUser.id + ')';
+    const { data, error } = await db.from('messages')
+      .select('id,sender_id,recipient_id,body,created_at')
+      .or(filter).order('created_at', { ascending: true }).limit(100);
+    if (error) {
+      $('privatePopupStatus').textContent = 'Nem tölthetők be az üzenetek: ' + error.message;
+      return;
+    }
+    box.replaceChildren();
+    for (const m of data || []) {
+      const item = document.createElement('div');
+      item.className = 'private-popup-message' +
+        (String(m.sender_id) === String(currentUser.id) ? ' mine' : '');
+      item.textContent = m.body || '';
+      const time = document.createElement('span');
+      time.className = 'private-popup-time';
+      time.textContent = m.created_at ? new Date(m.created_at).toLocaleString('hu-HU') : '';
+      item.append(time);
+      box.append(item);
+    }
+    $('privatePopupStatus').textContent = (data && data.length) ? 'Privát beszélgetés' : 'Még nincs üzenet. Írj elsőként!';
+    box.scrollTop = box.scrollHeight;
+  } catch (error) {
+    $('privatePopupStatus').textContent = 'Hiba: ' + (error.message || 'Ismeretlen hiba');
+  } finally {
+    privatePopupBusy = false;
+  }
+}
+
+async function sendPopupPrivateMessage(event) {
+  event.preventDefault();
+  if (!currentUser || !privatePopupTarget) return;
+  const input = $('privatePopupInput');
+  const body = input.value.trim();
+  if (!body) return;
+  const button = $('privatePopupSend');
+  button.disabled = true;
+  $('privatePopupStatus').textContent = 'Üzenet küldése…';
+  try {
+    const { error } = await db.from('messages').insert({
+      sender_id: currentUser.id,
+      recipient_id: String(privatePopupTarget.id),
+      body
+    });
+    if (error) {
+      $('privatePopupStatus').textContent = 'Nem sikerült elküldeni: ' + error.message;
+      return;
+    }
+    input.value = '';
+    await loadPrivatePopupMessages();
+  } catch (error) {
+    $('privatePopupStatus').textContent = 'Hiba: ' + (error.message || 'Ismeretlen hiba');
+  } finally {
+    button.disabled = false;
+    input.focus();
+  }
+}
+
+
+// Tagnév kattintása: privát üzenet és admin moderálási lehetőségek.
+function ensureMemberActionModal(){
+  if($('memberActionBackdrop')) return;
+  const wrap=document.createElement('div');wrap.id='memberActionBackdrop';
+  wrap.innerHTML=`<section id="memberActionCard" role="dialog" aria-modal="true" aria-labelledby="memberActionTitle">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 id="memberActionTitle">Tag</h2><button id="memberActionClose" type="button">Bezárás ✕</button></div>
+    <p id="memberActionInfo" class="muted small"></p>
+    <div class="actions"><button id="memberPrivateButton" type="button">✉ Privát üzenet</button></div>
+    <div id="moderationTools" class="hidden"><hr><h3>🛡 Moderálás</h3><p class="muted small">A moderálás az adatbázisban rögzül. Ehhez a Supabase-ben beállított moderálási SQL-függvény szükséges.</p>
+      <div class="actions"><button type="button" data-mod="kick">Kidobás</button><button type="button" data-mod="10">10 perc</button><button type="button" data-mod="30">30 perc</button><button type="button" data-mod="60">1 óra</button><button type="button" data-mod="perm">Végleges tiltás</button><button type="button" data-mod="unban" style="background:#333">Tiltás feloldása</button></div>
+    </div><p id="moderationStatus" role="status"></p></section>`;
+  document.body.append(wrap);
+  $('memberActionClose').addEventListener('click',()=>wrap.style.display='none');
+  wrap.addEventListener('click',e=>{if(e.target===wrap)wrap.style.display='none'});
+  $('memberPrivateButton').addEventListener('click',()=>{if(activeMemberProfile){wrap.style.display='none';if(String(activeMemberProfile.id)!==String(currentUser?.id))openPrivatePopup(activeMemberProfile)}});
+  wrap.querySelectorAll('[data-mod]').forEach(b=>b.addEventListener('click',()=>moderateMember(b.dataset.mod)));
+}
+let activeMemberProfile=null;
+function openMemberActions(profile){
+  if(!currentUser||!profile?.id)return;
+  activeMemberProfile=profile;ensureMemberActionModal();
+  $('memberActionTitle').textContent='👤 '+(profile.display_name||'Tag');
+  $('memberActionInfo').textContent=String(profile.id)===String(currentUser.id)?'Saját profil':'';
+  $('memberPrivateButton').classList.toggle('hidden',String(profile.id)===String(currentUser.id));
+  $('moderationTools').classList.toggle('hidden',!isPredatorAdmin||String(profile.id)===String(currentUser.id)||String(profile.id)===OWNER_USER_ID);
+  $('moderationStatus').textContent='';$('memberActionBackdrop').style.display='flex';
+}
+function playModerationSound(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return;
+    const ctx=new AudioCtx();
+    const now=ctx.currentTime;
+    [880,660].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type='sine';osc.frequency.value=freq;
+      gain.gain.setValueAtTime(0.0001,now+i*0.13);
+      gain.gain.exponentialRampToValueAtTime(0.16,now+i*0.13+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001,now+i*0.13+0.11);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(now+i*0.13);osc.stop(now+i*0.13+0.12);
+    });
+    setTimeout(()=>ctx.close().catch(()=>{}),500);
+  }catch(_){}
+}
+async function moderateMember(action){
+  if(!currentUser||!isPredatorAdmin||!activeMemberProfile)return;
+  const labels={kick:'kidobás',10:'10 perces tiltás',30:'30 perces tiltás',60:'1 órás tiltás',perm:'végleges tiltás',unban:'tiltás feloldása'};
+  if(!confirm('Biztosan végrehajtod: '+labels[action]+' – '+(activeMemberProfile.display_name||'tag')+'?'))return;
+  $('moderationStatus').textContent='Moderálás folyamatban…';
+  const duration=action==='perm'?-1:action==='unban'?0:action==='kick'?0:Number(action);
+  const {data,error}=await db.rpc('moderate_predator_user',{p_user_id:activeMemberProfile.id,p_action:action,p_duration_minutes:duration});
+  if(error){$('moderationStatus').textContent='Nem sikerült moderálni: '+error.message+'\nA Supabase SQL Editorban futtatni kell a mellékelt moderálási SQL-t.';return}
+  const targetName=activeMemberProfile.display_name||activeMemberProfile.username||'Tag';
+  $('moderationStatus').textContent=data?.message||('Sikeres művelet: '+labels[action]+'.');
+  if(action==='kick'||action==='10'||action==='30'||action==='60'||action==='perm'){
+    playModerationSound();
+    if(currentRoom){
+      const durationText=action==='kick'?'kidobva':action==='perm'?'véglegesen kitiltva':action+' percre kitiltva';
+      const systemText='📢 RENDSZER: '+targetName+' '+durationText+' lett az adminisztrátor által.';
+      const {error:postError}=await db.from('messages').insert({
+        sender_id:currentUser.id,
+        room_id:currentRoom.id,
+        body:systemText
+      });
+      if(postError){
+        $('moderationStatus').textContent+=' A rendszerüzenet nem került be a chatbe: '+postError.message;
+      }
+    }else{
+      $('moderationStatus').textContent+=' Válassz chat-szobát, hogy a rendszerüzenet megjelenhessen.';
+    }
+  }
+}
+
+
+
+// Predator Chat – MyOnlineRadio oldalsó panel
+(function setupPredatorRadio(){
+  const select = document.getElementById('predatorRadioSelect');
+  const frame = document.getElementById('predatorRadioFrame');
+  const openLink = document.getElementById('predatorRadioOpen');
+  const toggle = document.getElementById('predatorRadioToggle');
+  const panel = document.getElementById('predatorRadio');
+  if (!select || !frame || !openLink || !toggle || !panel) return;
+  select.addEventListener('change', () => {
+    const url = select.value;
+    frame.src = url;
+    openLink.href = url;
+  });
+  toggle.addEventListener('click', () => {
+    const collapsed = panel.classList.toggle('is-collapsed');
+    toggle.textContent = collapsed ? 'Rádiópanel megnyitása' : 'Rádiópanel elrejtése';
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const select=$('predatorRadioSelect'),audio=$('predatorRadioAudio'),status=$('predatorRadioStatus'),openLink=$('predatorRadioOpen');
+  if(!select||!audio||!status||!openLink)return;
+  function chooseStation(){const option=select.options[select.selectedIndex];audio.pause();audio.src=select.value;audio.load();openLink.href=option?.dataset.home||'https://myonlineradio.hu/';status.textContent='Kiválasztva: '+(option?.textContent||'rádió')+'. Nyomd meg a lejátszás gombot.';}
+  select.addEventListener('change',chooseStation);
+  audio.addEventListener('playing',()=>status.textContent='A rádió szól: '+select.options[select.selectedIndex].textContent+'.');
+  audio.addEventListener('waiting',()=>status.textContent='Kapcsolódás a rádióhoz…');
+  audio.addEventListener('error',()=>status.textContent='Ez az adás most nem érhető el. Válassz másik állomást, vagy nyisd meg a MyOnlineRadio.hu oldalon.');
+  chooseStation();
+})();
+</script>
+
+<script id="predator-games-script">
+(function(){
+ const $g=id=>document.getElementById(id);
+ const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅'];let diceRolls=0,diceTotal=0;
+ const roll=$g('rollDice'),face=$g('diceFace'),diceStatus=$g('diceStatus'),diceScore=$g('diceScore');
+ if(roll&&face&&diceStatus&&diceScore){
+  roll.addEventListener('click',()=>{const n=Math.floor(Math.random()*6)+1;face.textContent=diceFaces[n-1];diceRolls++;diceTotal+=n;diceStatus.textContent='Dobás eredménye: '+n+'!';diceScore.textContent='Dobások: '+diceRolls+' · Összesen: '+diceTotal;});
+  $g('resetDice').addEventListener('click',()=>{diceRolls=0;diceTotal=0;face.textContent='⚀';diceStatus.textContent='Készen állsz a dobásra?';diceScore.textContent='Dobások: 0 · Összesen: 0';});
+ }
+ const cells=[...document.querySelectorAll('#xoBoard [data-cell]')],xoStatus=$g('xoStatus'),xoScore=$g('xoScore');
+ let board=Array(9).fill(''),turn='X',finished=false,score={X:0,O:0,draw:0};const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+ function updateScore(){xoScore.textContent='X győzelmek: '+score.X+' · O győzelmek: '+score.O+' · Döntetlen: '+score.draw;}
+ function restart(){board=Array(9).fill('');turn='X';finished=false;cells.forEach(c=>{c.textContent='';c.disabled=false;c.classList.remove('x','o');});xoStatus.textContent='X következik';}
+ cells.forEach(cell=>cell.addEventListener('click',()=>{const i=Number(cell.dataset.cell);if(finished||board[i])return;board[i]=turn;cell.textContent=turn;cell.classList.add(turn.toLowerCase());cell.disabled=true;const won=wins.some(line=>line.every(index=>board[index]===turn));if(won){finished=true;score[turn]++;xoStatus.textContent='🎉 '+turn+' nyert!';cells.forEach(c=>c.disabled=true);updateScore();return;}if(board.every(Boolean)){finished=true;score.draw++;xoStatus.textContent='🤝 Döntetlen!';updateScore();return;}turn=turn==='X'?'O':'X';xoStatus.textContent=turn+' következik';}));
+ if($g('xoRestart'))$g('xoRestart').addEventListener('click',restart);updateScore();
+})();
+</script>
+
+
+<style>
+#predatorCallPanel{position:fixed;inset:0;z-index:10050;background:#000c;display:none;align-items:center;justify-content:center;padding:14px}
+#predatorCallCard{width:min(720px,100%);background:#100d12;border:1px solid #ff243c;border-radius:16px;padding:16px;color:#fff;box-shadow:0 12px 50px #000}
+#predatorCallVideos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+#predatorCallVideos video{width:100%;max-height:260px;background:#050505;border-radius:10px;object-fit:cover}
+#predatorCallStatus{color:#ffc3ca;min-height:24px}
+#predatorCallCard button{margin:4px}
+@media(max-width:520px){#predatorCallVideos{grid-template-columns:1fr}#predatorCallVideos video{max-height:190px}}
+</style>
+<div id="predatorCallPanel" aria-live="polite">
+ <section id="predatorCallCard" role="dialog" aria-modal="true" aria-label="Predator Chat hívás">
+  <h2 id="predatorCallTitle">Predator Chat hívás</h2>
+  <p id="predatorCallStatus">Hívás előkészítése…</p>
+  <div id="predatorCallVideos"><video id="predatorLocalVideo" autoplay playsinline muted></video><video id="predatorRemoteVideo" autoplay playsinline></video></div>
+  <div id="predatorCallActions"></div>
+ </section>
+</div>
+<script>
+// Predator Chat – valódi tagok közötti hang-/videóhívás. A Supabase SQL beállítása szükséges.
+(function(){
+ 'use strict';
+ const $c=id=>document.getElementById(id);
+ let pc=null,localStream=null,activeCall=null,lastSignalAt='1970-01-01T00:00:00.000Z',pollTimer=null,incomingSeen=new Set(),busy=false,callMode='audio';
+ const rtcConfig={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+ function ui(title,status,buttons){$c('predatorCallTitle').textContent=title;$c('predatorCallStatus').textContent=status;$c('predatorCallActions').replaceChildren();(buttons||[]).forEach(([label,fn,kind])=>{const b=document.createElement('button');b.type='button';b.textContent=label;if(kind==='danger')b.style.background='#b00020';b.addEventListener('click',fn);$c('predatorCallActions').append(b)});$c('predatorCallPanel').style.display='flex';}
+ function hide(){ $c('predatorCallPanel').style.display='none'; }
+ async function sendSignal(type,payload){if(!activeCall||!currentUser)throw new Error('Nincs aktív hívás.');const recipient=String(activeCall.caller_id)===String(currentUser.id)?activeCall.callee_id:activeCall.caller_id;const {error}=await db.from('predator_call_signals').insert({call_id:activeCall.id,sender_id:currentUser.id,recipient_id:recipient,signal_type:type,payload});if(error)throw error;}
+ async function setCallStatus(status){if(!activeCall)return;const {error}=await db.from('predator_calls').update({status}).eq('id',activeCall.id);if(error)console.warn('Hívásállapot:',error.message);}
+ async function stopCall(message='A hívás befejeződött.'){if(activeCall&&currentUser){try{await sendSignal('hangup',{});}catch(_){}}if(pollTimer){clearInterval(pollTimer);pollTimer=null;}if(pc){pc.onicecandidate=null;pc.ontrack=null;pc.close();pc=null;}if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}if(activeCall)await setCallStatus('ended');activeCall=null;$c('predatorLocalVideo').srcObject=null;$c('predatorRemoteVideo').srcObject=null;ui('Predator Chat',message,[['Bezárás',hide]]);setTimeout(()=>{if(!activeCall)hide()},2200);}
+ async function addSignal(type,payload){await sendSignal(type,payload);}
+ async function setupPeer(video){pc=new RTCPeerConnection(rtcConfig);pc.onicecandidate=e=>{if(e.candidate)addSignal('ice',e.candidate.toJSON()).catch(err=>console.warn(err.message));};pc.ontrack=e=>{$c('predatorRemoteVideo').srcObject=e.streams[0];};localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:!!video});$c('predatorLocalVideo').srcObject=localStream;localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));}
+ async function fetchSignals(){if(!activeCall||!currentUser||busy)return;busy=true;try{const {data,error}=await db.from('predator_call_signals').select('id,signal_type,payload,created_at,sender_id').eq('call_id',activeCall.id).eq('recipient_id',currentUser.id).gt('created_at',lastSignalAt).order('created_at',{ascending:true}).limit(100);if(error)throw error;for(const sig of data||[]){lastSignalAt=sig.created_at;if(sig.signal_type==='answer'&&pc&&pc.signalingState==='have-local-offer'){await pc.setRemoteDescription(new RTCSessionDescription(sig.payload));ui('Hívás folyamatban','Kapcsolódva.',[['Mikrofon némítása',toggleMic],['Hívás bontása',()=>stopCall() ,'danger']]);}else if(sig.signal_type==='ice'&&pc){try{await pc.addIceCandidate(new RTCIceCandidate(sig.payload));}catch(e){console.warn('ICE jelzés:',e.message)}}else if(sig.signal_type==='hangup'){await stopCall('A másik tag bontotta a hívást.');break;}}}catch(e){console.warn('Hívásjelzés:',e.message);}finally{busy=false;}}
+ function toggleMic(){if(!localStream)return;const t=localStream.getAudioTracks()[0];if(t){t.enabled=!t.enabled;ui('Hívás folyamatban',t.enabled?'A mikrofon be van kapcsolva.':'A mikrofon némítva van.',[['Mikrofon váltása',toggleMic],['Hívás bontása',()=>stopCall(),'danger']]);}}
+ async function pollIncoming(){if(!currentUser||activeCall)return;const {data,error}=await db.from('predator_calls').select('id,caller_id,callee_id,call_type,status,created_at').eq('callee_id',currentUser.id).eq('status','ringing').order('created_at',{ascending:false}).limit(1);if(error){console.warn('Bejövő hívás:',error.message);return;}const c=data?.[0];if(!c||incomingSeen.has(c.id))return;incomingSeen.add(c.id);activeCall=c;callMode=c.call_type==='video'?'video':'audio';ui(callMode==='video'?'Bejövő videóhívás':'Bejövő hanghívás','Egy Predator Chat-tag hív.',[['Fogadás',()=>acceptCall(c)],['Elutasítás',()=>rejectCall(c),'danger']]);}
+ async function rejectCall(c){activeCall=c;await setCallStatus('declined');activeCall=null;hide();}
+ async function acceptCall(c){try{activeCall=c;lastSignalAt='1970-01-01T00:00:00.000Z';await setupPeer(callMode==='video');const {data,error}=await db.from('predator_call_signals').select('payload,created_at').eq('call_id',c.id).eq('signal_type','offer').order('created_at',{ascending:false}).limit(1).maybeSingle();if(error)throw error;if(!data)throw new Error('A hívás ajánlata nem érkezett meg.');await pc.setRemoteDescription(new RTCSessionDescription(data.payload));const answer=await pc.createAnswer();await pc.setLocalDescription(answer);await sendSignal('answer',answer);await setCallStatus('accepted');ui('Hívás folyamatban','Kapcsolódás…', [['Mikrofon váltása',toggleMic],['Hívás bontása',()=>stopCall(),'danger']]);pollTimer=setInterval(fetchSignals,900);}catch(e){ui('Hívási hiba',e.message,[['Bezárás',()=>stopCall('A hívás nem indult el.')]]);}}
+ async function startCall(profile,mode){if(!currentUser||!profile?.id||String(profile.id)===String(currentUser.id))return;if(!navigator.mediaDevices?.getUserMedia){alert('A kamera/mikrofon csak biztonságos HTTPS oldalon érhető el. Nyisd meg a GitHub Pages HTTPS címét.');return;}try{callMode=mode;const {data:call,error}=await db.from('predator_calls').insert({caller_id:currentUser.id,callee_id:profile.id,call_type:mode,status:'ringing'}).select('id,caller_id,callee_id,call_type,status,created_at').single();if(error)throw error;activeCall=call;lastSignalAt='1970-01-01T00:00:00.000Z';ui(mode==='video'?'Videóhívás':'Hanghívás','A másik tag hívása…',[['Hívás bontása',()=>stopCall(),'danger']]);await setupPeer(mode==='video');const offer=await pc.createOffer();await pc.setLocalDescription(offer);await sendSignal('offer',offer);pollTimer=setInterval(async()=>{await fetchSignals();const {data}=await db.from('predator_calls').select('status').eq('id',call.id).maybeSingle();if(data?.status==='declined'||data?.status==='ended')await stopCall('A hívást elutasították vagy befejezték.');},1000);}catch(e){await stopCall('Hívási hiba: '+(e.message||'Ismeretlen hiba'));alert('Nem indult el a hívás: '+(e.message||'Ellenőrizd a Supabase SQL-beállításokat.'));}}
+ // A meglévő tagműveleti ablakhoz kapcsoljuk a két hívógombot.
+ const oldEnsure=window.ensureMemberActionModal || (typeof ensureMemberActionModal==='function'?ensureMemberActionModal:null);
+ if(oldEnsure){window.ensureMemberActionModal=function(){oldEnsure();const card=document.getElementById('memberActionCard');if(!card||card.querySelector('#predatorAudioCall'))return;const row=document.createElement('div');row.className='actions';row.innerHTML='<button id="predatorAudioCall" type="button">📞 Hanghívás</button><button id="predatorVideoCall" type="button">📹 Videóhívás</button>';card.querySelector('.actions')?.after(row);row.querySelector('#predatorAudioCall').addEventListener('click',()=>{const p=window.activeMemberProfile||activeMemberProfile;startCall(p,'audio')});row.querySelector('#predatorVideoCall').addEventListener('click',()=>{const p=window.activeMemberProfile||activeMemberProfile;startCall(p,'video')});};}
+ // Aktív felhasználói munkamenet figyelése; egyszerű pollingot használ, külön Realtime publication nem kell.
+ setInterval(()=>{if(currentUser&&!activeCall)pollIncoming();},2500);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&currentUser&&!activeCall)pollIncoming();});
 })();
 </script>
 
