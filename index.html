@@ -265,7 +265,7 @@ button {
 </section>
 <section id="app" class="hidden">
   <nav class="tabs">
-  <button data-tab="music">🎵 Zene</button> <button data-tab="members">👥 Tagok</button><button data-tab="private">✉ Üzenetek</button><button data-tab="profile">👤 Profil</button><button data-tab="admin" id="adminTab" class="hidden">⚙ Admin</button>
+  <button type="button" data-tab="chat" class="active">💬 Chat</button><button type="button" data-tab="music">🎵 Zene</button> <button type="button" data-tab="members">👥 Tagok</button><button type="button" data-tab="private">✉ Üzenetek</button><button type="button" data-tab="profile">👤 Profil</button><button type="button" data-tab="admin" id="adminTab" class="hidden">⚙ Admin</button>
   </nav><section id="music" class="panel hidden">
   <h2>🎵 Predator Zene</h2>
   <p>Tölts fel zenét, vagy hallgasd meg a tagok által feltöltött zenéket!</p>
@@ -369,6 +369,11 @@ const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persist
 const $ = id => document.getElementById(id);
 let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',onlinePresenceChannel=null,onlineUserIds=new Set();
 const profileCache=new Map();
+window.addEventListener('unhandledrejection', event => {
+  const message = event.reason?.message || 'Ismeretlen háttérhiba';
+  if ($('chatStatus')) chatStatus('Váratlan hiba: ' + message);
+  console.error('Predator Chat hiba:', event.reason);
+});
 const DEFAULT_AVATAR='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="40" fill="#29292f"/><circle cx="40" cy="29" r="14" fill="#a6a6ad"/><path d="M13 72c2-17 13-25 27-25s25 8 27 25" fill="#a6a6ad"/></svg>');
 function status(message){$('status').textContent=message||''}
 function chatStatus(message){$('chatStatus').textContent=message||''}
@@ -449,7 +454,17 @@ $('register').addEventListener('click',async()=>{
 $('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim();if(!email){status('Először írd be az e-mail-címedet!');return}status('Jelszó-visszaállító e-mail küldése…');const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});status(error?'Hiba: '+error.message:'Ha a cím regisztrálva van, elküldtük a visszaállító e-mailt. A legfrissebb levelet nyisd meg.')});
 $('newPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const p1=$('newPassword').value,p2=$('newPasswordAgain').value;if(p1.length<6){status('A jelszónak legalább 6 karakteresnek kell lennie.');return}if(p1!==p2){status('A két jelszó nem egyezik.');return}status('Jelszó mentése…');const {error}=await db.auth.updateUser({password:p1});if(error){status('Nem sikerült megváltoztatni a jelszót: '+error.message);return}status('Sikerült megváltoztatni a jelszót.');$('newPasswordForm').reset();showRecovery(false);await db.auth.signOut();history.replaceState(null,'',location.pathname)});
 $('logout').addEventListener('click',async()=>{await db.auth.signOut()});
-document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));['chat','members','private','profile','admin'].forEach(id=>$(id).classList.add('hidden'));$(button.dataset.tab).classList.remove('hidden');if(button.dataset.tab==='members')loadMembers();if(button.dataset.tab==='private')loadPrivateMessages()})});
+document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener('click',()=>{
+  const tab=button.dataset.tab;
+  if(!$(tab))return;
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));
+  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.add('hidden'));
+  $(tab).classList.remove('hidden');
+  if(tab==='members')loadMembers();
+  if(tab==='private')loadPrivateMessages();
+  if(tab==='music')loadMusicList();
+  if(tab==='chat'&&currentRoom)loadMessages();
+})});
 const OWNER_USER_ID='aef906e3-f704-4a28-b3c2-6a1373c5c4f5';
 async function checkAdmin(){
   const {data,error}=await db.from('chat_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
@@ -488,10 +503,11 @@ async function loadRooms(){
   const {data,error}=await db.from('rooms').select('*');
   if(error){chatStatus('Nem tölthetők be a szobák: '+error.message);return}
   roomList=data||[];$('rooms').replaceChildren();
-  roomList.forEach(room=>{const name=room.name||room.title||room.slug||'Szoba';const b=document.createElement('button');b.textContent='💬 '+name;b.addEventListener('click',()=>selectRoom(room));$('rooms').append(b)});
+  roomList.forEach(room=>{const name=room.name||room.title||room.slug||'Szoba';const b=document.createElement('button');b.textContent='💬 '+name;b.dataset.roomId=String(room.id);b.addEventListener('click',()=>selectRoom(room));$('rooms').append(b)});
   if(!currentRoom&&roomList.length)selectRoom(roomList[0]);if(!roomList.length)chatStatus('Még nincs szoba a rooms táblában.');
 }
-function selectRoom(room){currentRoom=room;const name=room.name||room.title||room.slug||'Szoba';$('roomTitle').textContent=name;document.querySelectorAll('#rooms button').forEach(b=>b.classList.toggle('active',b.textContent==='💬 '+name));if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}loadMessages();messageChannel=db.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},payload=>renderMessage(payload.new)).subscribe()}
+let roomLoadToken=0;
+function selectRoom(room){currentRoom=room;roomLoadToken++;const name=room.name||room.title||room.slug||'Szoba';$('roomTitle').textContent=name;document.querySelectorAll('#rooms button').forEach(b=>b.classList.toggle('active',b.dataset.roomId===String(room.id)));if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}loadMessages();messageChannel=db.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},payload=>renderMessage(payload.new).catch(err=>chatStatus('Üzenetmegjelenítési hiba: '+(err?.message||'Ismeretlen hiba')))).subscribe()}
 async function loadProfileCache(){if(!currentUser)return;const {data,error}=await db.from('profiles').select('id,display_name,avatar_url').limit(500);if(error){console.warn('Profilképek betöltése:',error.message);return}(data||[]).forEach(p=>profileCache.set(String(p.id),p));const mine=profileCache.get(String(currentUser.id));if(mine?.avatar_url)$('avatarPreview').src=mine.avatar_url;else $('avatarPreview').src=DEFAULT_AVATAR}
 async function renderMessage(m){if(!m||String(m.room_id)!==String(currentRoom?.id))return;if($('messages').querySelector('[data-id="'+CSS.escape(String(m.id))+'"]'))return;const profile=profileCache.get(String(m.sender_id))||{};const item=document.createElement('div');item.className='msg';item.dataset.id=String(m.id);const avatar=document.createElement('img');avatar.className='msg-avatar';avatar.alt='Profilkép';avatar.src=profile.avatar_url||DEFAULT_AVATAR;const content=document.createElement('div');content.className='msg-content';const head=document.createElement('div');head.className='msg-head';const name=document.createElement('b');
 name.textContent = profile.display_name ||
@@ -505,7 +521,20 @@ if (String(m.sender_id) === OWNER_USER_ID) {
   name.append(police);
 }
                               const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';const body=document.createElement('div');body.className='message-body';const match=String(m.body||'').match(/^\[\[PREDATOR_IMAGE:(.+?)\]\](?: (.*))?$/);if(match){const {data,error}=await db.storage.from('chat-images').createSignedUrl(match[1].trim().replace(/^\/+/,'').replace(/^chat-images\//,''),3600);if(error){body.textContent='A kép nem tölthető be: '+error.message}else{if(match[2])body.append(document.createTextNode(match[2]));const img=document.createElement('img');img.className='chat-image';img.alt='Elküldött kép';img.src=data.signedUrl;img.loading='lazy';body.append(img)}}else{body.textContent=m.body||''}head.append(name,time);content.append(head,body);item.append(avatar,content);$('messages').append(item);$('messages').scrollTop=$('messages').scrollHeight}
-async function loadMessages(){$('messages').replaceChildren();if(!currentRoom)return;const {data,error}=await db.from('messages').select('id,sender_id,room_id,body,created_at').eq('room_id',currentRoom.id).is('recipient_id',null).order('created_at',{ascending:true}).limit(100);if(error){chatStatus('Nem tölthetők be az üzenetek: '+error.message);return}const ids=[...new Set((data||[]).map(m=>String(m.sender_id)))].filter(id=>!profileCache.has(id));if(ids.length){const {data:profiles}=await db.from('profiles').select('id,display_name,avatar_url').in('id',ids);(profiles||[]).forEach(p=>profileCache.set(String(p.id),p))}(data||[]).forEach(renderMessage);chatStatus('')}
+async function loadMessages(){
+  $('messages').replaceChildren();
+  if(!currentRoom)return;
+  const requestedRoom=String(currentRoom.id);
+  const token=roomLoadToken;
+  const {data,error}=await db.from('messages').select('id,sender_id,room_id,body,created_at').eq('room_id',currentRoom.id).is('recipient_id',null).order('created_at',{ascending:true}).limit(100);
+  if(token!==roomLoadToken||String(currentRoom?.id)!==requestedRoom)return;
+  if(error){chatStatus('Nem tölthetők be az üzenetek: '+error.message);return}
+  const ids=[...new Set((data||[]).map(m=>String(m.sender_id)))].filter(id=>!profileCache.has(id));
+  if(ids.length){const {data:profiles,error:profileError}=await db.from('profiles').select('id,display_name,avatar_url').in('id',ids);if(!profileError)(profiles||[]).forEach(p=>profileCache.set(String(p.id),p));}
+  if(token!==roomLoadToken||String(currentRoom?.id)!==requestedRoom)return;
+  for(const message of (data||[]))await renderMessage(message);
+  chatStatus('');
+}
 $('chooseChatImage').addEventListener('click',()=>$('chatImageFile').click());
 $('sendForm').addEventListener('submit',async e=>{
  e.preventDefault();if(!currentUser||!currentRoom){chatStatus('Előbb jelentkezz be és válassz szobát.');return}
@@ -558,10 +587,12 @@ function applySharedBackground(type,value){
 async function saveSharedBackground(type,value){
   if(!currentUser){
     $('backgroundStatus').textContent='Előbb jelentkezz be!';
+    if($('sharedBgStatus'))$('sharedBgStatus').textContent=$('backgroundStatus').textContent;
     return;
   }
 
   $('backgroundStatus').textContent='Mentés...';
+  if($('sharedBgStatus'))$('sharedBgStatus').textContent='Mentés...';
 
   const {error}=await db.from('chat_background').upsert({
     id:1,
@@ -572,12 +603,14 @@ async function saveSharedBackground(type,value){
 
   if(error){
     $('backgroundStatus').textContent='Hiba: '+error.message;
+    if($('sharedBgStatus'))$('sharedBgStatus').textContent=$('backgroundStatus').textContent;
     return;
   }
 
   applySharedBackground(type,value);
   $('backgroundStatus').textContent=
     'A közös háttér elmentve!';
+  if($('sharedBgStatus'))$('sharedBgStatus').textContent=$('backgroundStatus').textContent;
 }
 
 $('uploadBackground').addEventListener('click',async()=>{
@@ -600,6 +633,7 @@ $('uploadBackground').addEventListener('click',async()=>{
 
   if(!currentUser){
     $('backgroundStatus').textContent='Előbb jelentkezz be!';
+    if($('sharedBgStatus'))$('sharedBgStatus').textContent=$('backgroundStatus').textContent;
     return;
   }
 
@@ -695,10 +729,13 @@ function startOnlinePresence(){
 
   channel.subscribe(async status => {
     if (status === 'SUBSCRIBED') {
-      await channel.track({
+      const { error } = await channel.track({
         user_id: String(currentUser.id),
         online_at: new Date().toISOString()
       });
+      if (error) $('onlineMembersStatus').textContent = 'Az online állapot nem menthető: ' + error.message;
+    } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+      $('onlineMembersStatus').textContent = 'Az online taglista kapcsolata nem elérhető. Ellenőrizd a Supabase Realtime beállításait.';
     }
   });
 }
@@ -812,10 +849,14 @@ $('privateSendForm').addEventListener('submit',async e=>{
   const btn=$('privateSendForm').querySelector('button');btn.disabled=true;setPrivateStatus('Üzenet küldése…');
   const payload={sender_id:currentUser.id,recipient_id:recipient,body};
 
-  const {error}=await db.from('messages').insert(payload);
-  btn.disabled=false;
-  if(error){setPrivateStatus('Nem sikerült elküldeni: '+error.message+' — a messages INSERT szabályt és a room_id követelményt ellenőrizni kell.');return}
-  $('privateMessage').value='';await loadPrivateMessages();
+  try {
+    const {error}=await db.from('messages').insert(payload);
+    if(error){setPrivateStatus('Nem sikerült elküldeni: '+error.message+' — a messages tábla privátüzenet-szabályát és a room_id mező követelményét az adatbázisban kell ellenőrizni.');return}
+    $('privateMessage').value='';
+    await loadPrivateMessages();
+  } catch(err) {
+    setPrivateStatus('Küldési hiba: '+(err?.message||'Ismeretlen hiba'));
+  } finally { btn.disabled=false; }
 });
 
 $('uploadAvatar').addEventListener('click',async()=>{if(!currentUser){$('avatarStatus').textContent='Előbb jelentkezz be.';return}const file=$('avatarFile').files[0];if(!file){$('avatarStatus').textContent='Válassz ki egy képet.';return}if(file.size>10*1024*1024){$('avatarStatus').textContent='A kép legfeljebb 10 MB lehet.';return}const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=currentUser.id+'/avatar.'+ext;$('avatarStatus').textContent='Feltöltés…';const {error}=await db.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});if(error){$('avatarStatus').textContent='Feltöltési hiba: '+error.message;return}const {data}=db.storage.from('avatars').getPublicUrl(path);const avatarUrl=data.publicUrl+'?t='+Date.now();const old=profileCache.get(String(currentUser.id))||{};const {error:profileError}=await db.from('profiles').upsert({id:currentUser.id,email:currentUser.email,display_name:old.display_name||currentUser.email.split('@')[0],avatar_url:avatarUrl},{onConflict:'id'});if(profileError){$('avatarStatus').textContent='A kép feltöltődött, de a profil mentése nem sikerült: '+profileError.message;return}profileCache.set(String(currentUser.id),{id:currentUser.id,display_name:old.display_name||currentUser.email.split('@')[0],avatar_url:avatarUrl});$('avatarPreview').src=avatarUrl;$('avatarStatus').textContent='Profilkép feltöltve. Az új üzenetek mellett már ez fog látszani.';if(currentRoom)await loadMessages()});
@@ -950,23 +991,34 @@ $('musicUploadForm').addEventListener('submit', async e => {
     $('musicFile').value = '';
     await loadMusicList();
     $('musicStatus').textContent = 'Sikeres feltöltés!';
+  } catch (err) {
+    $('musicStatus').textContent = 'Feltöltési hiba: ' + (err?.message || 'Ismeretlen hiba');
   } finally {
     button.disabled = false;
   }
-});async function showSession(session){if(onlinePresenceChannel){
+});async function showSession(session){
+  const nextUser=session?.user||null;
+  if((currentUser?.id||null)===(nextUser?.id||null)){currentUser=nextUser;return;}
+  if(onlinePresenceChannel){
   db.removeChannel(onlinePresenceChannel);
   onlinePresenceChannel=null;
 }
 onlineUserIds.clear();
 $('onlineMemberList').replaceChildren();
 $('onlineMembersStatus').textContent='Nincs online tag';
-  currentUser=session?.user||null;const loggedIn=!!currentUser;
-  $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?currentUser.email:'Nincs bejelentkezve';
+  currentUser=nextUser;const loggedIn=!!currentUser;
+  $('auth').classList.toggle('hidden',loggedIn||recoveryMode);$('app').classList.toggle('hidden',!loggedIn||recoveryMode);$('logout').classList.toggle('hidden',!loggedIn);$('userbar').textContent=loggedIn?(profileCache.get(String(currentUser.id))?.display_name||currentUser.user_metadata?.username||currentUser.email||'Bejelentkezve'):'Nincs bejelentkezve';
+  // Minden új munkamenet a chat nézettel indul; korábbi admin/profil nézet nem maradhat nyitva.
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='chat'));
+  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='chat'));
   if(!loggedIn){
     if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}
     if(onlinePresenceChannel){db.removeChannel(onlinePresenceChannel);onlinePresenceChannel=null}
     onlineUserIds.clear();
     currentRoom=null;
+    privateRecipientId='';
+    $('privateRecipient').value='';
+    profileCache.clear();
     $('messages').replaceChildren();
     $('onlineMemberList').replaceChildren();
     $('onlineMembersStatus').textContent='Nincs online tag';
@@ -981,12 +1033,19 @@ $('onlineMembersStatus').textContent='Nincs online tag';
   const {error:ownProfileError}=await db.from('profiles').upsert({id:currentUser.id,email:currentUser.email,display_name:currentUser.user_metadata?.username||currentUser.user_metadata?.display_name||oldProfile.display_name||currentUser.email?.split('@')[0]||'Tag',avatar_url:oldProfile.avatar_url||null},{onConflict:'id'});
   if(ownProfileError)console.warn('Saját profil létrehozása nem sikerült:',ownProfileError.message);
   await loadProfileCache();
-await checkAdmin();
+  const signedInProfile=profileCache.get(String(currentUser.id));
+  $('userbar').textContent=signedInProfile?.display_name||currentUser.user_metadata?.username||currentUser.email||'Bejelentkezve';
+  await checkAdmin();
 await loadRooms();
 await loadMembers();
-startOnlinePresence();
+  await loadMusicList();
+  startOnlinePresence();
 }
-db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){showRecovery(true);return}if(event==='SIGNED_OUT')recoveryMode=false;setTimeout(()=>showSession(session),0)});
+db.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY'){showRecovery(true);return;}
+  if(event==='SIGNED_OUT')recoveryMode=false;
+  if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))setTimeout(()=>showSession(session),0);
+});
 (async()=>{if(!explainUrlError()){const {data,error}=await db.auth.getSession();if(error)status('Munkamenet-hiba: '+error.message);if(data?.session)await showSession(data.session)}})();
 
 // Közös háttér vezérlői – ugyanazt a chat_background beállítást használják.
