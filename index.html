@@ -46,7 +46,7 @@ h2{font-size:21px}h3{font-size:17px}#roomTitle{font-size:19px;font-weight:bold}
 .hidden{display:none!important}.small{font-size:13px}
 .avatar{width:100px;height:100px;object-fit:cover;border-radius:50%;display:block;margin-bottom:12px;background:#29292f;border:2px solid var(--red)}
 #avatarFile{margin:10px 0}
-.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}.member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
+.member-list{display:grid;gap:8px}.member-item{display:flex;align-items:center;gap:10px;padding:5px 2px;border:0;border-radius:0;background:transparent}.member-item img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#29292f}.member-item .member-name{flex:1;min-width:0;overflow-wrap:anywhere}.member-item button{padding:8px 10px}.private-layout{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1.3fr);gap:12px}.private-messages{height:40vh;min-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px}.private-compose{display:flex;gap:8px;margin-top:8px}.private-compose input{flex:1}.private-conversation-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}.secret-toggle{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:13px}.secret-toggle input{width:auto}.private-messages .secret-content{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.private-messages .secret-content input{max-width:220px}@media(max-width:650px){.private-layout{grid-template-columns:1fr}.private-compose{position:sticky;bottom:4px;background:var(--panel);padding:4px}}
 @media(max-width:650px){header{padding:11px 10px;gap:7px}h1{font-size:18px}#userbar{max-width:28vw;font-size:11px}header>button{padding:9px;font-size:13px}main{padding:0 8px;margin:9px auto}.panel{padding:11px;border-radius:13px}.layout{grid-template-columns:1fr;gap:8px}#chat .layout>aside{margin-bottom:0}#chat .layout>aside h3{margin:0 0 6px}#chat .layout>aside p{margin:5px 0}#messages{height:calc(100dvh - 330px);min-height:240px;max-height:58vh}.msg{padding:10px 5px}.msg div{font-size:16px}.composer{position:sticky;bottom:4px;z-index:5}.composer input{font-size:16px;padding:11px 12px}.composer button{padding:11px 12px}.tabs button{font-size:13px;padding:10px}.auth{margin:15px auto}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 .msg .msg-head b { color: #ff5b70; }
@@ -316,7 +316,7 @@ button {
   </aside>
 </section>
   <section id="members" class="panel hidden"><h2>Tagok</h2><p id="membersStatus" class="muted" role="status">Tagok betöltése…</p><div id="memberList" class="member-list"></div></section>
-  <section id="private" class="panel hidden"><h2>Privát üzenetek</h2><p class="muted small">Válassz tagot, majd küldhetsz neki privát üzenetet. A szükséges adatbázis-jogosultság hiányát a rendszer jelzi.</p><div class="private-layout"><div><label for="privateRecipient">Címzett</label><select id="privateRecipient"><option value="">Válassz tagot…</option></select><p id="privateStatus" class="muted" role="status"></p></div><div><div id="privateMessages" class="private-messages"></div><form id="privateSendForm" class="private-compose"><input id="privateMessage" maxlength="2000" placeholder="Privát üzenet…" autocomplete="off" required><button type="submit">Küldés</button></form></div></div></section>
+  <section id="private" class="panel hidden"><h2>Privát beszélgetés</h2><p class="muted small">A taglistában kattints annak a nevére, akinek írni szeretnél. Nem kell külön privát szobát keresned.</p><div class="private-conversation-head"><strong id="privateRecipientName">Nincs kiválasztott címzett</strong><button type="button" id="privateBackToMembers">Tagok</button></div><p id="privateStatus" class="muted" role="status"></p><div id="privateMessages" class="private-messages"></div><form id="privateSendForm" class="private-compose"><input id="privateMessage" maxlength="2000" placeholder="Privát üzenet…" autocomplete="off"><label class="secret-toggle"><input id="privateSecretMode" type="checkbox"> 🔒 Titkos írás</label><input id="privateSecretKey" class="hidden" type="password" maxlength="128" placeholder="Közös titkos jelszó" autocomplete="off"><button type="submit">Küldés</button></form><p class="muted small">Titkos írásnál a szöveg titkosítva kerül mentésre. A címzettnek ugyanazt a közös jelszót kell ismernie a visszafejtéshez; azt külön, biztonságos módon osszátok meg.</p></section>
   <section id="profile" class="panel hidden">
     <h2>Profilom</h2><img id="avatarPreview" class="avatar" src="https://placehold.co/120x120?text=Profil" alt="Profilkép">
     <label for="displayName">Megjelenő név</label><input id="displayName" maxlength="32" placeholder="A chatben látható neved"><button type="button" id="saveDisplayName">Név mentése</button><p id="displayNameStatus" class="muted small"></p>
@@ -367,7 +367,7 @@ const SUPABASE_URL = 'https://tmcbfjpwzeafixchsbqt.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_qRH3wqaMjDd0gPdvvzElBw_luhhqZLP';
 const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $ = id => document.getElementById(id);
-let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',onlinePresenceChannel=null,onlineUserIds=new Set();
+let currentUser=null,currentRoom=null,roomList=[],messageChannel=null,recoveryMode=false,privateRecipientId='',privateRecipientProfile=null,onlinePresenceChannel=null,onlineUserIds=new Set();
 const profileCache=new Map();
 window.addEventListener('unhandledrejection', event => {
   const message = event.reason?.message || 'Ismeretlen háttérhiba';
@@ -461,7 +461,7 @@ document.querySelectorAll('[data-tab]').forEach(button=>{button.addEventListener
   ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.add('hidden'));
   $(tab).classList.remove('hidden');
   if(tab==='members')loadMembers();
-  if(tab==='private')loadPrivateMessages();
+  if(tab==='private' && privateRecipientId)loadPrivateMessages();
   if(tab==='music')loadMusicList();
   if(tab==='chat'&&currentRoom)loadMessages();
 })});
@@ -685,6 +685,9 @@ function renderOnlineMembers(){
 
     const row = document.createElement('div');
     row.className = 'member-item';
+    row.style.cursor = 'pointer';
+    row.title = 'Kattints, ha privát üzenetet szeretnél írni';
+    row.addEventListener('click', () => openPrivateChat(profile));
 
     const img = document.createElement('img');
     img.alt = 'Profilkép';
@@ -740,115 +743,133 @@ function startOnlinePresence(){
   });
 }
 
+async function openPrivateChat(profile){
+  if(!currentUser){setPrivateStatus('Előbb jelentkezz be.');return}
+  if(!profile || String(profile.id)===String(currentUser.id))return;
+  privateRecipientProfile=profile;
+  privateRecipientId=String(profile.id);
+  $('privateRecipientName').textContent='Beszélgetés: '+(profile.display_name||profile.email||'Tag');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='private'));
+  ['chat','music','members','private','profile','admin'].forEach(id=>$(id)?.classList.toggle('hidden',id!=='private'));
+  await loadPrivateMessages();
+  $('privateMessage').focus();
+}
+
 async function loadMembers(){
   if (!currentUser) return;
   setMemberStatus('Tagok betöltése…');
-
   const { data, error } = await db.from('profiles')
     .select('id,display_name,email,avatar_url,role')
     .order('display_name', { ascending: true })
     .limit(500);
-
   if (error) {
-    setMemberStatus('Nem tölthető be a taglista: ' + error.message +
-      ' — a profiles táblához SELECT jogosultság szükséges.');
+    setMemberStatus('Nem tölthető be a taglista: ' + error.message + ' — a profiles táblához SELECT jogosultság szükséges.');
     return;
   }
-
   const list = $('memberList');
   list.replaceChildren();
-
-  const recipients = $('privateRecipient');
-  const previous = recipients.value;
-  recipients.replaceChildren();
-
-  const first = document.createElement('option');
-  first.value = '';
-  first.textContent = 'Válassz tagot…';
-  recipients.append(first);
-
   const profiles = data || [];
   for (const profile of profiles) {
     profileCache.set(String(profile.id), profile);
-
-    if (String(profile.id) !== String(currentUser.id)) {
-      const option = document.createElement('option');
-      option.value = String(profile.id);
-      option.textContent = profile.display_name ||
-        profile.email || ('Tag ' + String(profile.id).slice(0, 8));
-      recipients.append(option);
-
-      const row = document.createElement('div');
-      row.className = 'member-item';
-
-      const img = document.createElement('img');
-      img.alt = 'Profilkép';
-      img.src = profile.avatar_url || DEFAULT_AVATAR;
-
-      const name = document.createElement('div');
-      name.className = 'member-name';
-      name.textContent = profile.display_name ||
-        profile.email || ('Tag ' + String(profile.id).slice(0, 8));
-
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = 'Privát üzenet';
-      button.addEventListener('click', () => {
-        document.querySelector('[data-tab="private"]').click();
-        $('privateRecipient').value = String(profile.id);
-        privateRecipientId = String(profile.id);
-        loadPrivateMessages();
-      });
-
-      row.append(img, name, button);
-      list.append(row);
-    }
+    if (String(profile.id) === String(currentUser.id)) continue;
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'member-item';
+    row.style.cssText = 'width:100%;text-align:left;color:inherit;background:transparent;border:1px solid var(--line);';
+    row.title = 'Privát beszélgetés megnyitása';
+    const img = document.createElement('img');
+    img.alt = 'Profilkép';
+    img.src = profile.avatar_url || DEFAULT_AVATAR;
+    const name = document.createElement('span');
+    name.className = 'member-name';
+    name.textContent = profile.display_name || profile.email || ('Tag ' + String(profile.id).slice(0, 8));
+    const action = document.createElement('span');
+    action.textContent = 'Üzenet ›';
+    action.style.color = 'var(--red)';
+    row.append(img, name, action);
+    row.addEventListener('click', () => openPrivateChat(profile));
+    list.append(row);
   }
-
-  if (previous && profiles.some(p => String(p.id) === previous)) {
-    recipients.value = previous;
-  }
-
   renderOnlineMembers();
-
   if (!profiles.some(p => String(p.id) !== String(currentUser.id))) {
     setMemberStatus('Másik tag nem látható. Ellenőrizni kell, hogy a profiles SELECT szabály engedi-e a tagok olvasását.');
   } else {
-    setMemberStatus((profiles.length - 1) + ' másik tag betöltve.');
+    setMemberStatus((profiles.length - 1) + ' másik tag betöltve. Kattints egy névre a privát beszélgetéshez.');
   }
+}
+
+async function derivePrivateKey(passphrase,salt){
+  const enc=new TextEncoder();
+  const material=await crypto.subtle.importKey('raw',enc.encode(passphrase),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function encryptPrivateText(plain,passphrase){
+  if(!crypto?.subtle)throw new Error('A titkosítás csak biztonságos HTTPS-kapcsolaton támogatott böngészőben működik.');
+  const enc=new TextEncoder(),salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await derivePrivateKey(passphrase,salt);
+  const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(plain));
+  const bytes=new Uint8Array(salt.length+iv.length+cipher.byteLength);bytes.set(salt,0);bytes.set(iv,16);bytes.set(new Uint8Array(cipher),28);
+  let binary='';for(const b of bytes)binary+=String.fromCharCode(b);
+  return '[[PC_SECRET_V1]]'+btoa(binary);
+}
+async function decryptPrivateText(encoded,passphrase){
+  const raw=atob(encoded.replace(/^\[\[PC_SECRET_V1\]\]/,''));
+  const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));
+  const salt=bytes.slice(0,16),iv=bytes.slice(16,28),cipher=bytes.slice(28);
+  const key=await derivePrivateKey(passphrase,salt);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,cipher);
+  return new TextDecoder().decode(plain);
+}
+function appendPrivateMessage(m){
+  const row=document.createElement('div');row.className='msg';
+  const content=document.createElement('div');content.className='msg-content';
+  const head=document.createElement('div');head.className='msg-head';
+  const name=document.createElement('b');const profile=profileCache.get(String(m.sender_id));
+  name.textContent=String(m.sender_id)===String(currentUser.id)?'Te':(profile?.display_name||profile?.email||'Tag');
+  const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';
+  head.append(name,time);content.append(head);
+  const body=document.createElement('div');body.className='message-body';
+  if(String(m.body||'').startsWith('[[PC_SECRET_V1]]')){
+    const secret=document.createElement('div');secret.className='secret-content';
+    const label=document.createElement('span');label.textContent='🔒 Titkos üzenet';
+    const keyInput=document.createElement('input');keyInput.type='password';keyInput.placeholder='Közös jelszó';keyInput.autocomplete='off';
+    const reveal=document.createElement('button');reveal.type='button';reveal.textContent='Visszafejtés';
+    reveal.addEventListener('click',async()=>{reveal.disabled=true;try{body.textContent=await decryptPrivateText(m.body,keyInput.value);keyInput.value='';}catch(e){setPrivateStatus('Nem sikerült visszafejteni. Ellenőrizd a közös jelszót.');reveal.disabled=false;}});
+    secret.append(label,keyInput,reveal);body.append(secret);
+  }else body.textContent=m.body||'';
+  content.append(body);row.append(content);$('privateMessages').append(row);
 }
 async function loadPrivateMessages(){
   if(!currentUser)return;
-  privateRecipientId=$('privateRecipient').value;
   const box=$('privateMessages');box.replaceChildren();
-  if(!privateRecipientId){setPrivateStatus('Válassz címzettet.');return}
+  if(!privateRecipientId){setPrivateStatus('A taglistában kattints annak a nevére, akinek írni szeretnél.');return}
   setPrivateStatus('Privát üzenetek betöltése…');
   const filter='and(sender_id.eq.'+currentUser.id+',recipient_id.eq.'+privateRecipientId+'),and(sender_id.eq.'+privateRecipientId+',recipient_id.eq.'+currentUser.id+')';
   const {data,error}=await db.from('messages').select('id,sender_id,recipient_id,body,created_at').or(filter).order('created_at',{ascending:true}).limit(100);
   if(error){setPrivateStatus('Nem tölthetők be a privát üzenetek: '+error.message+' — a messages SELECT szabályának engednie kell a küldőnek és a címzettnek.');return}
-  if(!data||!data.length){setPrivateStatus('Még nincs privát üzenet.');return}
+  if(!data||!data.length){setPrivateStatus('Még nincs üzenet. Írj elsőként!');return}
   setPrivateStatus('Privát beszélgetés');
-  for(const m of data){
-    const row=document.createElement('div');row.className='msg';
-    const content=document.createElement('div');content.className='msg-content';
-    const head=document.createElement('div');head.className='msg-head';
-    const name=document.createElement('b');const profile=profileCache.get(String(m.sender_id));name.textContent=String(m.sender_id)===String(currentUser.id)?'Te':(profile?.display_name||profile?.email||'Tag');
-    const time=document.createElement('span');time.className='time';time.textContent=m.created_at?new Date(m.created_at).toLocaleString('hu-HU'):'';
-    const body=document.createElement('div');body.className='message-body';body.textContent=m.body||'';
-    head.append(name,time);content.append(head,body);row.append(content);box.append(row);
-  }
+  for(const m of data)appendPrivateMessage(m);
   box.scrollTop=box.scrollHeight;
 }
-$('privateRecipient').addEventListener('change',loadPrivateMessages);
+$('privateBackToMembers').addEventListener('click',()=>document.querySelector('[data-tab="members"]').click());
+$('privateSecretMode').addEventListener('change',e=>{
+  $('privateSecretKey').classList.toggle('hidden',!e.target.checked);
+  if(e.target.checked)$('privateSecretKey').focus();else $('privateSecretKey').value='';
+});
 $('privateSendForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!currentUser){setPrivateStatus('Előbb jelentkezz be.');return}
-  const recipient=$('privateRecipient').value,body=$('privateMessage').value.trim();
-  if(!recipient){setPrivateStatus('Először válassz címzettet.');return}
+  const recipient=privateRecipientId;let body=$('privateMessage').value.trim();
+  if(!recipient){setPrivateStatus('Előbb válassz tagot a taglistából.');return}
   if(!body)return;
-  const btn=$('privateSendForm').querySelector('button');btn.disabled=true;setPrivateStatus('Üzenet küldése…');
+  if($('privateSecretMode').checked){
+    const pass=$('privateSecretKey').value;
+    if(pass.length<8){setPrivateStatus('A titkos jelszó legalább 8 karakter legyen. A címzettnek is ezt kell majd megadnod.');return}
+    try{body=await encryptPrivateText(body,pass);}catch(err){setPrivateStatus('Titkosítási hiba: '+(err?.message||'Ismeretlen hiba'));return}
+  }
+  const btn=$('privateSendForm').querySelector('button[type="submit"]');btn.disabled=true;setPrivateStatus('Üzenet küldése…');
   const payload={sender_id:currentUser.id,recipient_id:recipient,body};
-
   try {
     const {error}=await db.from('messages').insert(payload);
     if(error){setPrivateStatus('Nem sikerült elküldeni: '+error.message+' — a messages tábla privátüzenet-szabályát és a room_id mező követelményét az adatbázisban kell ellenőrizni.');return}
@@ -1017,7 +1038,6 @@ $('onlineMembersStatus').textContent='Nincs online tag';
     onlineUserIds.clear();
     currentRoom=null;
     privateRecipientId='';
-    $('privateRecipient').value='';
     profileCache.clear();
     $('messages').replaceChildren();
     $('onlineMemberList').replaceChildren();
